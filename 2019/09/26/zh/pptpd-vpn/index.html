@@ -1,0 +1,250 @@
+
+<!DOCTYPE html>
+<html lang="zh" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>(Ubuntu 16.0.4)记一次VPN搭建记录 - WhiteRobe&#39;s Blog</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.0/katex.min.css" rel="stylesheet">
+    <meta name="keywords" content="WhiteRobe, Blog,"> 
+    <meta name="description" content="着眼实例，从最简单的开始；你觉得再简单不过的东西，或许在别人眼里那就是悬崖。而我，愿作那攀岩绳。,
+在Ubuntu 16.04下经过测试，以下命令均在root权限下进行测试。
+
+ ① 安装pptpd
+1apt update &amp;amp;&amp;amp; apt install pptpd
+ ② 对虚拟专,"> 
+    <meta name="author" content="WhiteRobe"> 
+    <link rel="alternative" href="atom.xml" title="WhiteRobe&#39;s Blog" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/fira_code.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+        <!--站内搜索API-->
+        <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/algolia-min.css" integrity="sha256-HB49n/BZjuqiCtQQf49OdZn63XuKFaxcIHWf0HNKte8=" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@3.4.0/dist/instantsearch.production.min.js" integrity="sha256-pM0n88cBFRHpSn0N26ETsQdwpA7WAXJDvkHeCLh3ujI=" crossorigin="anonymous"></script>
+    
+    <!-- <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+          // No more ads!
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script> -->
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">WhiteRobe&#39;s Blog</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block; display: block;position: fixed; top: 0px;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="https://blog.whiterobe.top"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">(Ubuntu 16.0.4)记一次VPN搭建记录</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div style="font-size: 1rem;margin-right: -10px">
+          分享此文：
+        </div>
+        <div>
+          <div class="share">
+              <a title="获取文章地址二维码" class="icon-scan" href="javascript:;"></a>
+          </div>
+          <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section" style="margin-top: 50px">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">(Ubuntu 16.0.4)记一次VPN搭建记录</h1>
+        <div class="stuff">
+            <span>九月 26, 2019</span>
+            <span id="busuanzi_container_page_pv" class="busuanzi_page" style="display:none">本文总阅读量<div id="busuanzi_value_page_pv" style="display: inline;">1</div>次</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/网络技术/">网络技术</a></li></ul>
+
+
+        </div>
+        <div class="low-resolution-warn-info">当前设备屏幕尺寸过小，推荐使用PC模式浏览。</div>
+        <div class="content markdown">
+            <ul>
+<li>在Ubuntu 16.04下经过测试，以下命令均在<code>root</code>权限下进行测试。</li>
+</ul>
+<h2 id="1-安装pptpd"><a class="markdownIt-Anchor" href="#1-安装pptpd"></a> ① 安装pptpd</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt update &amp;&amp; apt install pptpd</span><br></pre></td></tr></table></figure>
+<h2 id="2-对虚拟专用网络进行ip段分配"><a class="markdownIt-Anchor" href="#2-对虚拟专用网络进行ip段分配"></a> ② 对虚拟专用网络进行IP段分配</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/pptpd.conf</span><br></pre></td></tr></table></figure>
+<p>添加/修改字段：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">localip &lt;VPS的IP，如117.123.123.123&gt;</span><br><span class="line">remoteip 172.16.1.120-200 # 客户端要分配的网段</span><br></pre></td></tr></table></figure>
+<h2 id="3-指定dns写入文件末尾即可"><a class="markdownIt-Anchor" href="#3-指定dns写入文件末尾即可"></a> ③  指定DNS写入文件末尾即可</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/ppp/pptpd-options</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 国际DNS</span><br><span class="line">ms-dns 8.8.8.8</span><br><span class="line">ms-dns 114.114.114.114</span><br><span class="line"># 阿里云DNS</span><br><span class="line">ms-dns 223.6.6.6</span><br><span class="line">ms-dns 223.5.5.5</span><br></pre></td></tr></table></figure>
+<h2 id="4-配置用户名和密码"><a class="markdownIt-Anchor" href="#4-配置用户名和密码"></a> ④ 配置用户名和密码</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/ppp/chap-secrets</span><br></pre></td></tr></table></figure>
+<p>按照以下提示进行填写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Secrets for authentication using CHAP</span><br><span class="line"># client        server  secret       IP addresses</span><br><span class="line">&lt;客户端用户名&gt;    pptpd   &lt;客户端密码&gt;   *</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>若分配的IP地址标记为<code>*</code>时会在上文给定的字段里自动给客户端划分IP；但是测试的时候发现偶有给客户端分发了同一IP的情况，因此还是手动给不同客户端指定IP为宜。</p>
+<ul>
+<li>另外要注意几个字段间的空格要在一个以上。</li>
+</ul>
+</blockquote>
+<h2 id="5-开启ip转发"><a class="markdownIt-Anchor" href="#5-开启ip转发"></a> ⑤ 开启IP转发</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># 将“net.ipv4.ip_forward = 0”改为“net.ipv4.ip_forward = 1”</span><br></pre></td></tr></table></figure>
+<p>使其生效：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysctl -p</span><br></pre></td></tr></table></figure>
+<h2 id="6-配置转发策略以及开放常用的端口"><a class="markdownIt-Anchor" href="#6-配置转发策略以及开放常用的端口"></a> ⑥ 配置转发策略以及开放常用的端口</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE</span><br><span class="line">iptables -A INPUT -p tcp -m tcp --dport 21 -j ACCEPT</span><br><span class="line">iptables -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT</span><br><span class="line">iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT</span><br><span class="line">iptables -A INPUT -p tcp -m tcp --dport 1723 -j ACCEPT</span><br></pre></td></tr></table></figure>
+<p>或者直接开放所有端口：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">iptables -P INPUT ACCEPT            # 允许所有入口流量</span><br><span class="line">iptables -P FORWARD ACCEPT     # 允许所有出口流量</span><br><span class="line">iptables -t nat -A POSTROUTING -o ens3 -j MASQUERADE     # 添加NAT转发规则</span><br></pre></td></tr></table></figure>
+<p>执行<code>iptables-save</code>保存配置。</p>
+<blockquote>
+<p>注意: 服务器重启后会重置这些内容，导致连上VPN后无法上网。</p>
+<ul>
+<li>在root权限下执行语句<code>iptables-save &gt; /etc/iptables.up.rules</code>写出规则脚本，用<code>iptables-restore &lt; /etc/iptables.up.rules</code>再导入脚本。可以尝试配合<code>/etc/rc.local</code>文件使用。</li>
+</ul>
+</blockquote>
+<h2 id="7-启动或重启pptpd服务"><a class="markdownIt-Anchor" href="#7-启动或重启pptpd服务"></a> ⑦  启动或重启pptpd服务</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service pptpd start</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：服务器重启后会关闭pptpd服务，需要再次启动。</p>
+<ul>
+<li>把该语句写入<code>/etc/rc.local</code>以开机自启。(<code>rc.local</code>为Ubuntu默认的开机自启内容配置项)</li>
+</ul>
+</blockquote>
+<h2 id="一些杂项"><a class="markdownIt-Anchor" href="#一些杂项"></a> 一些杂项</h2>
+<ul>
+<li>Linux系统在连接VPN时要开启MPPE，否则无法连接。</li>
+<li>如果Win报错<code>端口已关闭</code>，还需要执行<code>chmod 777 /dev/ppp</code>。</li>
+<li>如果ssh出现<code>Socket error Event: 32 Error: 10053</code>，可以尝试<code>/etc/sshd_config</code>中的<code>ClientAliveInterval</code>字段设为<code>60</code>。(好像是因为国外服务器延迟比较高，不把这个值调高容易直接掉线)</li>
+</ul>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/jinyecheng.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/juhuatai.mp3'></li>
+                        
+                    
+                        
+                            <li title='2' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/MapleStory.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='true'
+        data-ci='5b763306cd7b9d9c3981'
+        data-cs='c31e9bf78a807055f5439caea747b09d1d9c8f18'
+        data-r='image-blog.io'
+        data-o='WhiteRobe'
+        data-a='WhiteRobe'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-安装pptpd"><span class="toc-number">1.</span> <span class="toc-text"> ① 安装pptpd</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-对虚拟专用网络进行ip段分配"><span class="toc-number">2.</span> <span class="toc-text"> ② 对虚拟专用网络进行IP段分配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-指定dns写入文件末尾即可"><span class="toc-number">3.</span> <span class="toc-text"> ③  指定DNS写入文件末尾即可</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-配置用户名和密码"><span class="toc-number">4.</span> <span class="toc-text"> ④ 配置用户名和密码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-开启ip转发"><span class="toc-number">5.</span> <span class="toc-text"> ⑤ 开启IP转发</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-配置转发策略以及开放常用的端口"><span class="toc-number">6.</span> <span class="toc-text"> ⑥ 配置转发策略以及开放常用的端口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-启动或重启pptpd服务"><span class="toc-number">7.</span> <span class="toc-text"> ⑦  启动或重启pptpd服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一些杂项"><span class="toc-number">8.</span> <span class="toc-text"> 一些杂项</span></a></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+    <!--下悬浮返回键-->
+    <div style="background: white; height:30px; width: 30px; border-radius: 16px; position: fixed; bottom: 1.5rem; right: 1.5rem; border: 2px solid rgba(0, 0, 0, 0.5)">
+      <a class="icon-left image-icon" style="left:4px; top:4px" href="javascript:history.back()"></a>
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

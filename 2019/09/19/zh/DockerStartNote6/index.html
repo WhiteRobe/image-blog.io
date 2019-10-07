@@ -1,0 +1,262 @@
+
+<!DOCTYPE html>
+<html lang="zh" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Docker官方起步指南学习笔记⑥——nvidia-docker在19.03+版本下的安装 - WhiteRobe&#39;s Blog</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.0/katex.min.css" rel="stylesheet">
+    <meta name="keywords" content="WhiteRobe, Blog,"> 
+    <meta name="description" content="着眼实例，从最简单的开始；你觉得再简单不过的东西，或许在别人眼里那就是悬崖。而我，愿作那攀岩绳。, 新旧Docker的差异
+
+本文中的docker默认为CE版，即社区版；对于个人或小型实验室而言已然足够。
+
+现在不少网上的教程对新版docker和nvidia-docker的安装已经不再适用了，最,"> 
+    <meta name="author" content="WhiteRobe"> 
+    <link rel="alternative" href="atom.xml" title="WhiteRobe&#39;s Blog" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/fira_code.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+        <!--站内搜索API-->
+        <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/algolia-min.css" integrity="sha256-HB49n/BZjuqiCtQQf49OdZn63XuKFaxcIHWf0HNKte8=" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@3.4.0/dist/instantsearch.production.min.js" integrity="sha256-pM0n88cBFRHpSn0N26ETsQdwpA7WAXJDvkHeCLh3ujI=" crossorigin="anonymous"></script>
+    
+    <!-- <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+          // No more ads!
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script> -->
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">WhiteRobe&#39;s Blog</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block; display: block;position: fixed; top: 0px;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="https://blog.whiterobe.top"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">Docker官方起步指南学习笔记⑥——nvidia-docker在19.03+版本下的安装</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div style="font-size: 1rem;margin-right: -10px">
+          分享此文：
+        </div>
+        <div>
+          <div class="share">
+              <a title="获取文章地址二维码" class="icon-scan" href="javascript:;"></a>
+          </div>
+          <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section" style="margin-top: 50px">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">Docker官方起步指南学习笔记⑥——nvidia-docker在19.03+版本下的安装</h1>
+        <div class="stuff">
+            <span>九月 19, 2019</span>
+            <span id="busuanzi_container_page_pv" class="busuanzi_page" style="display:none">本文总阅读量<div id="busuanzi_value_page_pv" style="display: inline;">1</div>次</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/Docker/">Docker</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/版本控制/">版本控制</a></li></ul>
+
+
+        </div>
+        <div class="low-resolution-warn-info">当前设备屏幕尺寸过小，推荐使用PC模式浏览。</div>
+        <div class="content markdown">
+            <h1 id="新旧docker的差异"><a class="markdownIt-Anchor" href="#新旧docker的差异"></a> 新旧Docker的差异</h1>
+<blockquote>
+<p>本文中的docker默认为CE版，即社区版；对于个人或小型实验室而言已然足够。</p>
+</blockquote>
+<p>现在不少网上的教程对新版<code>docker</code>和<code>nvidia-docker</code>的安装已经不再适用了，最大的区别在于<code>nvidia-docker2</code>已经被废弃，<code>nvidia-docker</code>已经支持原生的docker虚拟设备。</p>
+<p>最直观的体验就是——你不再需要使用<code>nvidia-docker</code>指令来进行docker指令操作，一旦安上了最新版的<code>docker</code>和<code>nvidia-docker</code>软件包，你的所有docker镜像/容器都将拥有使用N系GPU的权利。</p>
+<p>需要注意的是：</p>
+<ol>
+<li>你的Linux系统中应当装好了NVIDIA的驱动；</li>
+<li>你的docker版本在19.03+；</li>
+</ol>
+<p>你可以使用<code>docker -v</code>指令来检查你的docker版本。如果版本过于落后，请使用：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get remove docker docker-engine docker.io containerd runc</span><br></pre></td></tr></table></figure>
+<p>移除旧版docker(该指令不会移除系统中现有的配置文件、镜像和容器)。</p>
+<p>如果你安装过旧版的nvidia-docker，你可能还需要执行以下命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get remove nvidia-docker nvidia-docker2 docker-ce</span><br></pre></td></tr></table></figure>
+<p>此外，如果你有强迫症，还可以移除旧版的依赖包(此操作为可选项，毕竟删了可能待会儿换新版还要再装回来)：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get autoremove docker</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果要还要移除镜像和容器，请直接移除<code>/var/lib/docker</code>目录下的文件；使用<code>apt-get purge &lt;包名&gt;</code>移除配置文件。</p>
+</blockquote>
+<h1 id="安装新版docker"><a class="markdownIt-Anchor" href="#安装新版docker"></a> 安装新版docker</h1>
+<blockquote>
+<p>以下安装针对19.03.2版本(2019.9月最新)左右的docker for ubuntu，不同版本请查看：<br>
+<a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/" target="_blank" rel="noopener">Get Docker Engine - Community for Ubuntu</a></p>
+</blockquote>
+<p>如果你之前没有安装过docker或移除了旧版本的docker，你需要使用以下指令进行它的安装：</p>
+<ol>
+<li>以防万一，先更新软件索引：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>安装一些附属包，允许apt使用HTTPS安装软件：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install \</span><br><span class="line">    apt-transport-https \</span><br><span class="line">    ca-certificates \</span><br><span class="line">    curl \</span><br><span class="line">    gnupg-agent \</span><br><span class="line">    software-properties-common</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>下载、添加官方的GPG密钥：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>选择stable版本的apt仓库：(<strong>注意</strong>：此处仅针对<em>Ubuntu x86_64/amd64</em>，不同版本或系统位数请上开头给出的官方文档查看)</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository \</span><br><span class="line">   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \</span><br><span class="line"><span class="meta">   $</span><span class="bash">(lsb_release -cs) \</span></span><br><span class="line">   stable"</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>更新apt仓库的索引并安装：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install docker-ce docker-ce-cli containerd.io</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>运行hello-world测试：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run hello-world</span><br></pre></td></tr></table></figure>
+<h2 id="options设置国内仓库"><a class="markdownIt-Anchor" href="#options设置国内仓库"></a> (Options)设置国内仓库</h2>
+<p>以Ubuntu和<a href="https://www.aliyun.com/product/acr" target="_blank" rel="noopener">阿里云镜像库</a>为例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir -p /etc/docker</span><br><span class="line">sudo tee /etc/docker/daemon.json &lt;&lt;-'EOF'</span><br><span class="line">&#123;</span><br><span class="line">  "registry-mirrors": [你的阿里云镜像地址]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+<h1 id="安装新版nvidia-docker"><a class="markdownIt-Anchor" href="#安装新版nvidia-docker"></a> 安装新版nvidia-docker</h1>
+<p>新版nvidia-docker的十分简便，从安装到测试只有两个步骤：(以Ubuntu 16.04/18.04为例)</p>
+<ol>
+<li>(Ubuntu 16.04/18.04)添加apt仓库地址、密钥和nvidia工具集：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">distribution=$(. /etc/os-release;echo $ID$VERSION_ID)</span><br><span class="line">curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -</span><br><span class="line">curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list</span><br><span class="line"></span><br><span class="line">sudo apt-get update </span><br><span class="line">sudo apt-get install -y nvidia-container-toolkit</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>测试是否安装成功(前提是已经安装显卡驱动)：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --gpus all nvidia/cuda:9.0-base nvidia-smi</span><br></pre></td></tr></table></figure>
+<p>理论上应该会打印你的显卡信息。</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/jinyecheng.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/juhuatai.mp3'></li>
+                        
+                    
+                        
+                            <li title='2' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/MapleStory.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='true'
+        data-ci='5b763306cd7b9d9c3981'
+        data-cs='c31e9bf78a807055f5439caea747b09d1d9c8f18'
+        data-r='image-blog.io'
+        data-o='WhiteRobe'
+        data-a='WhiteRobe'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#新旧docker的差异"><span class="toc-number">1.</span> <span class="toc-text"> 新旧Docker的差异</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#安装新版docker"><span class="toc-number">2.</span> <span class="toc-text"> 安装新版docker</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#options设置国内仓库"><span class="toc-number">2.1.</span> <span class="toc-text"> (Options)设置国内仓库</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#安装新版nvidia-docker"><span class="toc-number">3.</span> <span class="toc-text"> 安装新版nvidia-docker</span></a></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+    <!--下悬浮返回键-->
+    <div style="background: white; height:30px; width: 30px; border-radius: 16px; position: fixed; bottom: 1.5rem; right: 1.5rem; border: 2px solid rgba(0, 0, 0, 0.5)">
+      <a class="icon-left image-icon" style="left:4px; top:4px" href="javascript:history.back()"></a>
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

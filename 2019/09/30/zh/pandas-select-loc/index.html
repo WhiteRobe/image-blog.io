@@ -1,0 +1,282 @@
+
+<!DOCTYPE html>
+<html lang="zh" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pandas中的索引和切片技巧 - WhiteRobe&#39;s Blog</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.0/katex.min.css" rel="stylesheet">
+    <meta name="keywords" content="WhiteRobe, Blog,"> 
+    <meta name="description" content="着眼实例，从最简单的开始；你觉得再简单不过的东西，或许在别人眼里那就是悬崖。而我，愿作那攀岩绳。,
+扩展资料: indexing-selecting-assigning
+
+ 切片选择
+ 范围选择
+记df为一个DataFrame，则选中 mmm 行到 nnn 的数据，使用df.loc[m:n](当,"> 
+    <meta name="author" content="WhiteRobe"> 
+    <link rel="alternative" href="atom.xml" title="WhiteRobe&#39;s Blog" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/fira_code.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+        <!--站内搜索API-->
+        <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/algolia-min.css" integrity="sha256-HB49n/BZjuqiCtQQf49OdZn63XuKFaxcIHWf0HNKte8=" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@3.4.0/dist/instantsearch.production.min.js" integrity="sha256-pM0n88cBFRHpSn0N26ETsQdwpA7WAXJDvkHeCLh3ujI=" crossorigin="anonymous"></script>
+    
+    <!-- <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+          // No more ads!
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script> -->
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">WhiteRobe&#39;s Blog</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block; display: block;position: fixed; top: 0px;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="https://blog.whiterobe.top"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">pandas中的索引和切片技巧</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div style="font-size: 1rem;margin-right: -10px">
+          分享此文：
+        </div>
+        <div>
+          <div class="share">
+              <a title="获取文章地址二维码" class="icon-scan" href="javascript:;"></a>
+          </div>
+          <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section" style="margin-top: 50px">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">pandas中的索引和切片技巧</h1>
+        <div class="stuff">
+            <span>九月 30, 2019</span>
+            <span id="busuanzi_container_page_pv" class="busuanzi_page" style="display:none">本文总阅读量<div id="busuanzi_value_page_pv" style="display: inline;">1</div>次</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/pandas/">pandas</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/学习笔记/">学习笔记</a></li></ul>
+
+
+        </div>
+        <div class="low-resolution-warn-info">当前设备屏幕尺寸过小，推荐使用PC模式浏览。</div>
+        <div class="content markdown">
+            <blockquote>
+<p>扩展资料: <a href="https://www.kaggle.com/residentmario/indexing-selecting-assigning" target="_blank" rel="noopener">indexing-selecting-assigning</a></p>
+</blockquote>
+<h2 id="切片选择"><a class="markdownIt-Anchor" href="#切片选择"></a> 切片选择</h2>
+<h3 id="范围选择"><a class="markdownIt-Anchor" href="#范围选择"></a> 范围选择</h3>
+<p>记<code>df</code>为一个<em>DataFrame</em>，则选中 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">m</span></span></span></span> 行到 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span> 的数据，使用<code>df.loc[m:n]</code>(当rows的索引都为数字时)或<code>df.iloc[m:n]</code>。</p>
+<h3 id="指定行列"><a class="markdownIt-Anchor" href="#指定行列"></a> 指定行/列</h3>
+<p>假设数据：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>column_name_1</th>
+<th>column_name_2</th>
+<th>column_name_3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>a</td>
+<td>b</td>
+<td>c</td>
+</tr>
+<tr>
+<td>1</td>
+<td>d</td>
+<td>e</td>
+<td>f</td>
+</tr>
+<tr>
+<td>2</td>
+<td>g</td>
+<td>h</td>
+<td>i</td>
+</tr>
+</tbody>
+</table>
+<p>则<code>df.loc[0:2, ['column_name_1', column_name_3]]</code> (等效于 <code>df.loc[0:2, [0, 2]]</code>)将会选出数据：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>column_name_1</th>
+<th>column_name_3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>a</td>
+<td>c</td>
+</tr>
+<tr>
+<td>1</td>
+<td>d</td>
+<td>f</td>
+</tr>
+<tr>
+<td>2</td>
+<td>g</td>
+<td>i</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>即其基础格式为：<code>loc[行索引, 列索引]</code></li>
+</ul>
+<h3 id="loc和iloc的差别"><a class="markdownIt-Anchor" href="#loc和iloc的差别"></a> loc和iloc的差别</h3>
+<p>在<code>pandas</code>中，<code>loc</code>和<code>iloc</code>的差别并不大，主要体现在两个地方:</p>
+<ol>
+<li>包含性不同，<code>loc</code>是<strong>inclusively</strong>的；而<code>iloc</code>是<strong>excluded</strong>的，如：<code>df.iloc[0:2]</code>会选中第 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>0</mn><mo separator="true">,</mo><mtext> </mtext><mn>1</mn></mrow><annotation encoding="application/x-tex">0,\ 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace"> </span><span class="mord">1</span></span></span></span> 行的数值；而df.loc[0:2]`会选中 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>0</mn><mo separator="true">,</mo><mtext> </mtext><mn>1</mn><mo separator="true">,</mo><mtext> </mtext><mn>2</mn></mrow><annotation encoding="application/x-tex">0,\ 1, \ 2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace"> </span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace"> </span><span class="mord">2</span></span></span></span> 行的数据。</li>
+<li>意义不同；<code>pandas</code>中，一个<em>DataFrame</em>的结构分为<code>rows</code>和<code>columns</code>，有时我们也把<code>rows</code>称为<code>index</code>(但其实际上应该称为<code>rows</code>)；当我们使用<code>loc</code>函数时，必需指定的是每一列的<code>label</code>而不是<code>index</code>。例如第一列的<code>index</code>为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span>，而其<code>label</code>为&quot;column_name_1&quot;(假设)；<code>iloc</code>正好相反。</li>
+</ol>
+<ul>
+<li>我们会将以序数作为索引的方式称为<code>Index-based</code>，则<code>iloc</code>适用于这种场景，即:<code>Index-based selection</code>。</li>
+<li>我们会将以字符串作为索引的方式称为<code>Label-based</code>，则<code>loc</code>适用于这种场景，即:<code>Label-based selection</code>。</li>
+</ul>
+<h2 id="条件选择"><a class="markdownIt-Anchor" href="#条件选择"></a> 条件选择</h2>
+<p>可以直接使用<code>df['column_name_1']=='something'</code>来直接选择出适合的值；但一般还是会用<code>loc</code>函数来做这件事：<code>df.loc[df['column_name_1']=='something]'</code>。</p>
+<p>这么做看起来多此一举，实际上可以进行多种条件的组合：``df.loc[(df[‘column_name_1’]=='something) &amp; df[‘column_name_2’ == ‘otherthing’]]`。</p>
+<ul>
+<li>注意是<code>&amp;</code>而不是<code>&amp;&amp;</code>; 或运算符<code>|</code>同理。</li>
+</ul>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/jinyecheng.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/juhuatai.mp3'></li>
+                        
+                    
+                        
+                            <li title='2' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/MapleStory.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='true'
+        data-ci='5b763306cd7b9d9c3981'
+        data-cs='c31e9bf78a807055f5439caea747b09d1d9c8f18'
+        data-r='image-blog.io'
+        data-o='WhiteRobe'
+        data-a='WhiteRobe'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#切片选择"><span class="toc-number">1.</span> <span class="toc-text"> 切片选择</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#范围选择"><span class="toc-number">1.1.</span> <span class="toc-text"> 范围选择</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#指定行列"><span class="toc-number">1.2.</span> <span class="toc-text"> 指定行/列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#loc和iloc的差别"><span class="toc-number">1.3.</span> <span class="toc-text"> loc和iloc的差别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#条件选择"><span class="toc-number">2.</span> <span class="toc-text"> 条件选择</span></a></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+    <!--下悬浮返回键-->
+    <div style="background: white; height:30px; width: 30px; border-radius: 16px; position: fixed; bottom: 1.5rem; right: 1.5rem; border: 2px solid rgba(0, 0, 0, 0.5)">
+      <a class="icon-left image-icon" style="left:4px; top:4px" href="javascript:history.back()"></a>
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

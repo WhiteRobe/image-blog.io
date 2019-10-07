@@ -1,0 +1,712 @@
+
+<!DOCTYPE html>
+<html lang="zh" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Linux:硬盘管理与文件系统 - WhiteRobe&#39;s Blog</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.0/katex.min.css" rel="stylesheet">
+    <meta name="keywords" content="WhiteRobe, Blog,"> 
+    <meta name="description" content="着眼实例，从最简单的开始；你觉得再简单不过的东西，或许在别人眼里那就是悬崖。而我，愿作那攀岩绳。, Preliminaries
+
+请确保您对cd、ls等命令有了一定的了解，懂得使用--help参数，如ls --help查看所有命令的详细参数和使用帮助。
+
+本文将可能会用到以下命令：
+
+基本操作：,"> 
+    <meta name="author" content="WhiteRobe"> 
+    <link rel="alternative" href="atom.xml" title="WhiteRobe&#39;s Blog" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/fira_code.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+        <!--站内搜索API-->
+        <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/algolia-min.css" integrity="sha256-HB49n/BZjuqiCtQQf49OdZn63XuKFaxcIHWf0HNKte8=" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@3.4.0/dist/instantsearch.production.min.js" integrity="sha256-pM0n88cBFRHpSn0N26ETsQdwpA7WAXJDvkHeCLh3ujI=" crossorigin="anonymous"></script>
+    
+    <!-- <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+          // No more ads!
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script> -->
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">WhiteRobe&#39;s Blog</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block; display: block;position: fixed; top: 0px;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="https://blog.whiterobe.top"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">Linux:硬盘管理与文件系统</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div style="font-size: 1rem;margin-right: -10px">
+          分享此文：
+        </div>
+        <div>
+          <div class="share">
+              <a title="获取文章地址二维码" class="icon-scan" href="javascript:;"></a>
+          </div>
+          <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section" style="margin-top: 50px">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">Linux:硬盘管理与文件系统</h1>
+        <div class="stuff">
+            <span>九月 16, 2019</span>
+            <span id="busuanzi_container_page_pv" class="busuanzi_page" style="display:none">本文总阅读量<div id="busuanzi_value_page_pv" style="display: inline;">1</div>次</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/Linux/">Linux</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/文件系统/">文件系统</a></li></ul>
+
+
+        </div>
+        <div class="low-resolution-warn-info">当前设备屏幕尺寸过小，推荐使用PC模式浏览。</div>
+        <div class="content markdown">
+            <h1 id="preliminaries"><a class="markdownIt-Anchor" href="#preliminaries"></a> Preliminaries</h1>
+<blockquote>
+<p>请确保您对<code>cd</code>、<code>ls</code>等命令有了一定的了解，懂得使用<code>--help</code>参数，如<code>ls --help</code>查看所有命令的详细参数和使用帮助。</p>
+</blockquote>
+<p>本文将可能会用到以下命令：</p>
+<ul>
+<li>基本操作：<code>cd</code>、<code>ls</code>、<code>rm</code>、<code>mkdir</code>、<code>rmdir</code>、<code>pwd</code></li>
+<li>文件创建、复制、移动删除：<code>touch</code>、<code>cp</code>、<code>mv</code>、<code>rm</code></li>
+<li>文件权限管理：<code>chmod</code>、<code>chown</code>、<code>umask</code></li>
+<li>文件查看、读写：<code>vi</code>、<code>vim</code>、<code>gedit</code>、<code>cat</code></li>
+<li>文件检索：<code>find</code>、<code>whereis</code>、<code>which</code></li>
+<li>用户管理：<code>useradd</code>、<code>usermod</code>、<code>groupadd</code></li>
+<li>磁盘管理：<code>mount</code>、<code>umount</code>、<code>df</code>、<code>blkid</code>、<code>fdisk</code>、<code>ln</code></li>
+</ul>
+<p>您并不需要立刻掌握它们，但在本文中它们将可能会被用到，所以看完本文你将会学会这些指令的部分用法。</p>
+<h1 id="文件系统"><a class="markdownIt-Anchor" href="#文件系统"></a> 文件系统</h1>
+<p>Linux是基于多用户的系统，若管理不当，很容易造成文件的损坏等问题。因此文件系统值得进行学习和记录：</p>
+<ul>
+<li>文件的权限管理</li>
+<li>Linux的目录配置、各个目录的意义等</li>
+</ul>
+<blockquote>
+<p>注：由于部分内容需要权限才能操作，因此下文所有命令默认情况下均在root用户下进行操作。</p>
+<ul>
+<li>使用<code>su root</code>命令可以切换到root用户。</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="linux系统的文件属性"><a class="markdownIt-Anchor" href="#linux系统的文件属性"></a> Linux系统的文件属性</h2>
+<p>使用<code>cd /</code>切换到主目录，键入命令<code>ls -l</code>，会得到以下内容：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(以下数据在 <span class="string">"ubuntu 16.04 STL"</span> 得到)</span><br><span class="line">drwxr-xr-x   <span class="number">2</span> root root         <span class="number">4096</span> <span class="number">6</span>月  <span class="number">26</span> <span class="number">20</span>:<span class="number">16</span> bin</span><br><span class="line">drwxr-xr-x   <span class="number">4</span> root root         <span class="number">4096</span> <span class="number">6</span>月  <span class="number">26</span> <span class="number">20</span>:<span class="number">17</span> boot</span><br><span class="line">drwxrwxr-x   <span class="number">2</span> root root         <span class="number">4096</span> <span class="number">6</span>月  <span class="number">26</span> <span class="number">20</span>:<span class="number">10</span> cdrom</span><br><span class="line">-rw-------   <span class="number">1</span> root root      <span class="number">9367552</span> <span class="number">6</span>月  <span class="number">27</span> <span class="number">22</span>:<span class="number">21</span> core</span><br><span class="line">......(略)</span><br></pre></td></tr></table></figure>
+<p>各列意义分别为：<code>&lt;文件权限&gt; &lt;链接数&gt; &lt;所属拥有者&gt; &lt; 所属用户组&gt; &lt;文件大小&gt; &lt;修改日期 月:日:(年)-时:分:&gt; &lt;文件名&gt;</code>。</p>
+<h3 id="1-文件权限permission"><a class="markdownIt-Anchor" href="#1-文件权限permission"></a> ① 文件权限(permission)</h3>
+<p>此处显示的Linux的文件权限是一个10位的字符串，分为一个文件类型标识符和三组权限标识符，每组权限标识符有三位(<code>rwx</code>)：</p>
+<ul>
+<li>以<code>dev</code>文件为例，其首位为【d】，表示这是一个目录(<strong>d</strong>irectory)——【d】【l】【-】【b】【c】分表表示“目录”、“链接”(<strong>l</strong>ink)、“文件”、“任意读写设备”(<strong>b</strong>lock)和“串口设备”(<strong>c</strong>haracter)。</li>
+</ul>
+<blockquote>
+<p>又例如，<code>cd /dev</code>查看<code>sda</code>文件的文件属性，会发现这是一个【b】文件。在Linux中，这是首位挂载的SATA硬盘，将在下文进行进一步的解读。</p>
+</blockquote>
+<ul>
+<li>权限标识符分为三种【r】(read，权限代值为4)、【w】(write，权限代值为2)、【x】(execute，权限代值为1)。</li>
+<li>一共有三组权限标识符。这三组权限标识符从左到右分别标示出了文件所有者、同用户组用户和其它人的权限。</li>
+</ul>
+<blockquote>
+<p>如上文所显示的<code>boot</code>文件，它是一个目录，对于所有者<code>root</code>具有【rwx】(读写与执行)权限，对<code>root</code>用户组具有【rx】(读和执行)，其它用户对其可以【rx】。</p>
+</blockquote>
+<ul>
+<li>需要注意的是，root用户对所有文件具有完全权限。也就是说root文件不受文件权限属性的限制。</li>
+<li>目录和文件的<code>rwx</code>并不具有相同的意义，如对于一个文件<code>test.sh</code>，【r】权限表示其可以通过<code>vi test.sh</code>打开并读取、【x】权限可以利用<code>./test.sh</code>直接执行；对于一个目录<code>test</code>，【r】权限指的是目录子文件读取，如<code>ls</code>指令、【x】权限实际上指的是目录访问(access directory)，如<code>cd ./test</code>。</li>
+</ul>
+<h3 id="2-文件链接link-file"><a class="markdownIt-Anchor" href="#2-文件链接link-file"></a> ② 文件链接(link file)</h3>
+<p>文件属性的第二列表示有多少个文件链接到这个文件节点(inode)，这部分内容跟Linux的软连接和硬链接有关。将在下文中进行解释。</p>
+<hr>
+<h2 id="linux系统中的文件权限管理"><a class="markdownIt-Anchor" href="#linux系统中的文件权限管理"></a> Linux系统中的文件权限管理</h2>
+<p>本节将会介绍三种命令<code>chmod</code>、<code>chown</code>、<code>chgrp</code>。</p>
+<ul>
+<li><code>chgrp</code>是change group的缩写，即改变文件所属用户组，我们使用<code>chgrp --help</code>查看帮助：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">用法：chgrp [选项]... 用户组 文件...</span><br><span class="line">　或：chgrp [选项]... --reference=参考文件 文件...</span><br><span class="line">Change the group of each FILE to GROUP.</span><br><span class="line">With --reference, change the group of each FILE to that of RFILE.</span><br><span class="line"></span><br><span class="line">  -c, --changes          like verbose but report only when a change is made</span><br><span class="line">  -f, --silent, --quiet  suppress most error messages</span><br><span class="line">  -v, --verbose          output a diagnostic for every file processed</span><br><span class="line">      --dereference      affect the referent of each symbolic link (this is</span><br><span class="line">                         the default), rather than the symbolic link itself</span><br><span class="line">  -h, --no-dereference   affect symbolic links instead of any referenced file</span><br><span class="line">                         (useful only on systems that can change the</span><br><span class="line">                         ownership of a symlink)</span><br><span class="line">      --no-preserve-root  do not treat &apos;/&apos; specially (the default)</span><br><span class="line">      --preserve-root    fail to operate recursively on &apos;/&apos;</span><br><span class="line">      --reference=RFILE  use RFILE&apos;s group rather than specifying a</span><br><span class="line">                         GROUP value</span><br><span class="line">  -R, --recursive        operate on files and directories recursively</span><br><span class="line"></span><br><span class="line">The following options modify how a hierarchy is traversed when the -R</span><br><span class="line">option is also specified.  If more than one is specified, only the final</span><br><span class="line">one takes effect.</span><br><span class="line"></span><br><span class="line">  -H                     if a command line argument is a symbolic link</span><br><span class="line">                         to a directory, traverse it</span><br><span class="line">  -L                     traverse every symbolic link to a directory</span><br><span class="line">                         encountered</span><br><span class="line">  -P                     do not traverse any symbolic links (default)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">示例：</span><br><span class="line">  chgrp staff /u            将/u的属组更改为&quot;staff&quot;。</span><br><span class="line">  chgrp -hR staff /u        将/u及其子目录下所有文件的属组更改为&quot;staff&quot;。</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p><code>chown</code>的用途相当广，某种程度上可以直接替换<code>chgrp</code>指令。使用示例：<code>chown -R user:usergroup /test</code>可以把文件<code>/test</code>的所属用户和用户组修改为<code>user</code>和<code>usergroup</code>，【-R】参数可以一并修改该目录下的所有文件。</p>
+</li>
+<li>
+<p><code>chmod</code>用于修改文件权限，支持一系列的正则匹配方式。用的更多的方式是使用权限代值的方式修改文件权限：<code>chmod 735 /test</code>表示分别赋予权限【rwx】【-wx】【r-x】给用户、用户组和其他人。</p>
+</li>
+</ul>
+<blockquote>
+<p>权限代值：r=4、w=2、x=1；如果要赋予用户【rwx】的权限，即： 4+2+1=7，首位填7。</p>
+</blockquote>
+<blockquote>
+<p><code>chmod</code>还支持正则的操作方式，如<code>chmod u=rwx,go=rx</code>就会赋予权限【rwx】【r-x】【r-x】。<br>
+即<code>chmod [options] &lt;范围&gt;&lt;操作符&gt;&lt;权限符&gt;[,&lt;范围&gt;&lt;操作符&gt;&lt;权限符&gt;... ] &lt;文件或目录&gt;</code>。</p>
+</blockquote>
+<p><strong>chmod指令的正则Mode表</strong></p>
+<table>
+<thead>
+<tr>
+<th>范围</th>
+<th>操作符</th>
+<th>权限符</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>【u】(用户)、【g】(用户组)、【o】(其他人)、【a】(所有人)</td>
+<td>【+】(添加)、【-】(减去)、【=】(设置)</td>
+<td>【r】【w】【x】</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="文件目录与配置-管理"><a class="markdownIt-Anchor" href="#文件目录与配置-管理"></a> 文件目录与配置、管理</h2>
+<h3 id="1-filesystem-hierachy-standardfhs"><a class="markdownIt-Anchor" href="#1-filesystem-hierachy-standardfhs"></a> ① Filesystem Hierachy Standard(FHS)</h3>
+<p>因为Linux是一个多用户系统，为了方便更多的用户能够较好的协同，对文件的存放做出了规定，即FHS。概览如下：</p>
+<table>
+	<tr>
+		<th> </th>
+		<th>可分享(shareable)</th>
+		<th>不可分享(unshareable)</th>
+	</tr>
+	<tr>
+		<th rowspan="2"> 不变(static)</th>
+		<td>/usr(软件)</td>
+		<td>/etc(配置文件)</td>
+	</tr>
+	<tr>
+		<td>/opt(第三方辅助软件)</td>
+		<td>/boot(内核与部署文件)</td>
+	</tr>
+	<tr>
+		<th rowspan="2"> 可变动(variable) </th>
+		<td>/var/mail(邮箱)</td>
+		<td>/var/run(程序脚本相关【PID】)</td>
+	</tr>
+	<tr>
+		<td> /var/spool/news(新闻组)</td>
+		<td>/var/lock(程序单线程运行相关)</td>
+	</tr>
+</table>
+<p><strong>根目录存放标准：</strong></p>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>应放置文件目录</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/bin</td>
+<td>存放可执行文件的目录，如<code>chmod</code>、<code>cat</code>等</td>
+</tr>
+<tr>
+<td>/boot</td>
+<td>Linux内核及其它启动文件</td>
+</tr>
+<tr>
+<td>/dev</td>
+<td>硬件接口相关的文件存放于此，如<code>/dev/sda</code></td>
+</tr>
+<tr>
+<td>/etc</td>
+<td>系统主要的配置文件，如<code>/etc/passwd</code>、<code>etc/fstab</code>等</td>
+</tr>
+<tr>
+<td>/lib</td>
+<td>系统启动时及<code>/bin</code>中可执行文件会用到的函数库</td>
+</tr>
+<tr>
+<td>/media</td>
+<td>可删除的设备，如软盘、光盘等</td>
+</tr>
+<tr>
+<td>/mnt</td>
+<td>临时挂载到系统的文件</td>
+</tr>
+<tr>
+<td>/opt</td>
+<td>第三方辅助软件，即非发行版中对某功能所原生提供的软件</td>
+</tr>
+<tr>
+<td>/run</td>
+<td>系统启动时的各项程序脚本信息</td>
+</tr>
+<tr>
+<td>/sbin</td>
+<td>类似<code>/bin</code>，但这些脚本命令一般只有<code>root</code>用户配置整个系统时才会用到，如<code>fdisk</code>、<code>ifconfig</code>等</td>
+</tr>
+<tr>
+<td>/srv</td>
+<td>网络服务的数据存放目录</td>
+</tr>
+<tr>
+<td>/tmp</td>
+<td>程序存放临时数据的目录</td>
+</tr>
+<tr>
+<td>/usr</td>
+<td>软件存放目录，详见下文</td>
+</tr>
+<tr>
+<td>/var</td>
+<td>可变数据的存放目录，详见下文</td>
+</tr>
+<tr>
+<td>/home</td>
+<td>每个用户的主目录</td>
+</tr>
+<tr>
+<td>/lib<qual></qual></td>
+<td>存放与<code>/bin</code>中文件格式不同的二进制文件，如64位数的库文件等</td>
+</tr>
+<tr>
+<td>/root</td>
+<td><code>root</code>用户的主目录</td>
+</tr>
+</tbody>
+</table>
+<p><strong>UNIX Software Resource(/usr)：</strong></p>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>应放置文件目录</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/usr/bin</td>
+<td>所有一般用户都能执行的程序文件，发行版中基于<code>/bin</code>的文件通过链接会在该文件下都存在一份</td>
+</tr>
+<tr>
+<td>/usr/lib</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>/usr/local</td>
+<td>系统管理员在本机安装的软件，一般时为了避免版本差异。如<code>/bin</code>中自带了<code>python 2.7</code>，你可以在此处存一份<code>python 3.6</code>的版本</td>
+</tr>
+<tr>
+<td>/usr/sbin</td>
+<td>非系统正常运行所需要的程序命令文件</td>
+</tr>
+<tr>
+<td>/usr/share</td>
+<td>存放可分享的只读文件，如<code>/usr/share/man</code>存放在线帮助文件、<code>/usr/share/doc</code>存放软件的说明文档等</td>
+</tr>
+<tr>
+<td>/usr/src</td>
+<td>代码文件</td>
+</tr>
+<tr>
+<td>/usr/games</td>
+<td>游戏文件</td>
+</tr>
+<tr>
+<td>/usr/include</td>
+<td>C语言头文件</td>
+</tr>
+</tbody>
+</table>
+<p><strong>/var：</strong></p>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>应放置文件目录</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/var/cache</td>
+<td>程序运行过程中的缓存</td>
+</tr>
+<tr>
+<td>/var/lib</td>
+<td>程序运行过程中的依赖数据文件目录</td>
+</tr>
+<tr>
+<td>/var/lock</td>
+<td>程序运行过程中严格限制单线程使用的文件</td>
+</tr>
+<tr>
+<td>/var/log</td>
+<td>日志文件</td>
+</tr>
+<tr>
+<td>/var/mail</td>
+<td>邮箱文件</td>
+</tr>
+<tr>
+<td>/var/run</td>
+<td>程序运行后产生的PID会存放于此</td>
+</tr>
+<tr>
+<td>/var/spool</td>
+<td>队列数据，常用于跨程序调用时的缓存队列</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-文件目录管理"><a class="markdownIt-Anchor" href="#2-文件目录管理"></a> ② 文件目录管理</h3>
+<p><strong>相对路径与绝对路径、路径标识符</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">.        当前层目录</span><br><span class="line">..       上一层目录</span><br><span class="line">-        前一个目录</span><br><span class="line">~        用户的主目录</span><br><span class="line">~root    root用户的主目录</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如，存在一个用户名为<code>user</code>的用户，执行<code>cd ~</code>命令将会进入到<code>/home/user</code>目录中、<code>ls .</code>将会列出当前目录所有的文件。</p>
+</blockquote>
+<p><strong>目录操作命令：</strong></p>
+<ul>
+<li><code>cd</code> 切换目录，如<code>cd /</code>。其为【change directory】的缩写。</li>
+<li><code>pwd</code> 显示当前工作目录的绝对路径，其为【print working directory】的缩写。</li>
+<li><code>mkdir</code> 创建一个目录，如<code>mkdir /data</code>将会在根目录下创建一个<code>/data</code>文件夹。</li>
+<li><code>rmdir</code> 移除一个空目录。如果为非空目录，建议使用 <code>rm -rf /data</code>来移除一个非空目录<code>/data</code>。</li>
+</ul>
+<h3 id="3-文件的创建-复制-删除与移动"><a class="markdownIt-Anchor" href="#3-文件的创建-复制-删除与移动"></a> ③ 文件的创建、复制、删除与移动</h3>
+<ul>
+<li><code>touch</code> 实际上是修改文件的时间与日期，但经常用于创建一个新文件，如<code>touch ./newfile.txt</code></li>
+<li><code>cp</code>复制文件，如把当前层级的文件A移动到根目录下：<code>cp A /</code>。常用的参数【-p】，表示连文件的权限一同拷贝过去；【-r】用于把一个目录及目录里的子文件一同拷贝；【-i】如果目标地址已存在，会进行确认操作的询问。</li>
+<li><code>rm</code> 删除文件。常用的如【-rf】，用于不询问的删除整个目录文件(由于该操作比较<strong>危险</strong>，请谨慎操作)。</li>
+<li><code>mv</code> 移动文件，相当于Windows中的剪切操作。</li>
+</ul>
+<p>此处再补充一个指令：</p>
+<ul>
+<li><code>umask</code>用于指定、查看当前用户创建一个新文件时的默认权限。</li>
+</ul>
+<p>键入<code>umask -S</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">u=rwx,g=rwx,o=rx</span><br></pre></td></tr></table></figure>
+<p>对应的键入<code>umask</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0002</span></span><br></pre></td></tr></table></figure>
+<p>意思就是【others】缺了【w】(权限代值为2)。<br>
+使用命令<code>umask 0022</code>修改默认权限，再使用 <code>umask -S</code> 查看所设定的默认权限：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">u=rwx,g=rx,o=rx</span><br></pre></td></tr></table></figure>
+<h3 id="4-文件的查找"><a class="markdownIt-Anchor" href="#4-文件的查找"></a> ④ 文件的查找</h3>
+<ul>
+<li><code>which</code> 命令可以查找一个可执行文件/脚本的位置，如<code>which ls</code></li>
+<li><code>find</code> 可以在指定的目录中搜寻文件，如<code>find /bin -name ls</code>；该命令功能比较强大，可用【–help】查看详细的参数，此处不赘述，常用的指令如【-name】可以指定目标文件的名字。</li>
+<li><code>whereis</code> 该命令相较于<code>find</code>功能更简单，但速度较快，使用较简单；常用的参数如【-l】，可以指定要搜索的目录等。</li>
+</ul>
+<h3 id="5-环境变量-path"><a class="markdownIt-Anchor" href="#5-环境变量-path"></a> ⑤ 环境变量 $PATH</h3>
+<p>假如我有一个可执行文件存放在<code>/usr/mybin</code>中，我每次执行它时都要<code>cd</code>到这个文件夹然后再执行，就非常麻烦。在Windows中我们可以通过设置环境变量来告诉系统哪些路径下的文件是Shell的一级搜索目录，同样在Linux也有这个功能。</p>
+<p>我们可以通过<code>echo $PATH</code>命令来查看环境变量:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/home/user/bin:/home/user/.local/bin:/data/public/env/anaconda3/bin</span><br></pre></td></tr></table></figure>
+<p>可以观察到其包含了多组环境变量，用【:】隔开来。对于每个用户在其主目录下都有一个<code>.bashrc</code>文件用以配置环境变量，我们可以通过<code>vim ~/.bashrc</code>来查看该文件，并通过</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> $PATH=xxxxx:xxxxxx:xxxxxx</span><br></pre></td></tr></table></figure>
+<p>来设置环境变量。设置完毕后直接<code>reboot</code>重启系统或<code>source ~./bashrc</code>编译该文件即可刷新系统的环境变量。</p>
+<hr>
+<h2 id="文件链接"><a class="markdownIt-Anchor" href="#文件链接"></a> 文件链接</h2>
+<h3 id="1-索引式文件系统"><a class="markdownIt-Anchor" href="#1-索引式文件系统"></a> ① 索引式文件系统</h3>
+<p>在Linux中常用的ext2/3/4文件系统格式中，inode记录了某个文件其数据在硬盘中实际存放的区块。相比FAT格式的文件系统，inode能够让硬盘更快的检索到文件数据，某种程度上避免了频繁进行磁盘碎片整理的需求。</p>
+<p>inode的数据存储方式被称为<strong>索引式文件系统(index allocation)</strong>，每个文件会申请使用一个inode号，该inode指向的硬盘区块记录了文件数据的所有存储区块和存储顺序，操作系统就能凭此一次性读取所有的数据。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(以下数据在 <span class="string">"ubuntu 16.04 STL"</span> 得到)</span><br><span class="line">(首位就是inode号)</span><br><span class="line"><span class="number">6684673</span> drwxr-xr-x   <span class="number">2</span> root root         <span class="number">4096</span> <span class="number">6</span>月  <span class="number">26</span> <span class="number">20</span>:<span class="number">16</span> bin</span><br><span class="line"><span class="number">4849665</span> drwxr-xr-x   <span class="number">4</span> root root         <span class="number">4096</span> <span class="number">6</span>月  <span class="number">26</span> <span class="number">20</span>:<span class="number">17</span> boot</span><br><span class="line"><span class="number">7995393</span> drwxrwxr-x   <span class="number">2</span> root root         <span class="number">4096</span> <span class="number">6</span>月  <span class="number">26</span> <span class="number">20</span>:<span class="number">10</span> cdrom</span><br><span class="line">.......(略)</span><br></pre></td></tr></table></figure>
+<p>相对的，还会有一个<strong>超级区块(Super Block)</strong>，记录了系统中所有已使用和未使用的inode号，根据ext2/3/4的不同，每个inode占位从128B到256B。</p>
+<p>可以使用<code>dumpe2fs</code>指令查看ext文件系统的超级区块信息，如：<code>sudo dumpe2fs /dev/sda</code>。(如果硬盘较大，可以使用<code>Crtl+z</code>或<code>Ctrl+c</code>提前结束程序)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.......(略)</span><br><span class="line">Group <span class="number">6879</span>: (Blocks <span class="number">225411072</span>-<span class="number">225443839</span>) [INODE_UNINIT, BLOCK_UNINIT, ITABLE_ZEROED]</span><br><span class="line">  Checksum <span class="number">0x4553</span>, unused inodes <span class="number">8192</span></span><br><span class="line">  Block bitmap at 224919567 (bg #6864 + 15), Inode bitmap at 224919583 (bg #6864 + 31)</span><br><span class="line">  Inode表位于 224927264-224927775 (bg #6864 + 7712)</span><br><span class="line">  <span class="number">32768</span> free blocks, <span class="number">8192</span> free inodes, <span class="number">0</span> directories, <span class="number">8192</span>个未使用的inodes</span><br><span class="line">  可用块数: <span class="number">225411072</span>-<span class="number">225443839</span></span><br><span class="line">.......(略)</span><br></pre></td></tr></table></figure>
+<p>正因为有了inode，我们常说的【挂载】(mount)才有了意义。本质上，挂载操作是在向系统申请inode，通过给每个文件和目录分配inode，操作系统依靠inode寻找文件和鉴权，我们才能正常操作Linux系统。</p>
+<h3 id="2-硬链接与软符号链接"><a class="markdownIt-Anchor" href="#2-硬链接与软符号链接"></a> ② 硬链接与软(符号)链接</h3>
+<ul>
+<li><strong>软(符号)链接(Symbolic Link)</strong> 类似于Windows中的桌面快捷链接，它本身就是一个独立的文件，自身占用一个inode，但inode指向的数据是链接原文件的区块位置。</li>
+<li><strong>硬链接(Hard Link)</strong> 与链接源文件占用了同一个inode，它本身知识在某个目录下新加了一条指向原inode的关联记录。</li>
+</ul>
+<hr>
+<p>为了更好地分辨这两种链接方式的区别，我们进行以下操作：</p>
+<ol>
+<li>使用<code>touch a.txt</code>指令创建一个新文件<code>a.txt</code>，并使用<code>vim a.txt</code>将该文件的内容改为字符串 &quot;<em>数据</em> &quot;。(关于Vim的使用请查看帮助文档)</li>
+<li>使用<code>ls -li</code>和<code>cat a.txt</code>查看相关内容，注意观察其inode号(926162 )和链接数(=1)：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(base) root<span class="meta">@Server</span>:~/test$ ls -li</span><br><span class="line">总用量 <span class="number">4</span></span><br><span class="line"><span class="number">926162</span> -rw-rw-r-- <span class="number">1</span> root root <span class="number">7</span> <span class="number">6</span>月  <span class="number">30</span> <span class="number">18</span>:<span class="number">11</span> a.txt</span><br><span class="line"></span><br><span class="line">(base) root<span class="meta">@Server</span>:~/test$ cat a.txt </span><br><span class="line">数据</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>使用<code>ln a.txt hardlink_a</code>创建一个硬链接，使用<code>ls -li</code>查看，可以看到二者inode号一致、文件大小皆为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>7</mn></mrow><annotation encoding="application/x-tex">7</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">7</span></span></span></span> 且链接数皆变为了 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn></mrow><annotation encoding="application/x-tex">2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span></span></span></span>：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(base) root<span class="meta">@Server</span>:~/test$ ls -li</span><br><span class="line">总用量 <span class="number">8</span></span><br><span class="line"><span class="number">926162</span> -rw-rw-r-- <span class="number">2</span> root root <span class="number">7</span> <span class="number">6</span>月  <span class="number">30</span> <span class="number">18</span>:<span class="number">22</span> a.txt</span><br><span class="line"><span class="number">926162</span> -rw-rw-r-- <span class="number">2</span> root root <span class="number">7</span> <span class="number">6</span>月  <span class="number">30</span> <span class="number">18</span>:<span class="number">22</span> hardlink_a</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>使用<code>ln -s a.txt symlink_a</code>创建一个软链接，使用<code>ls -li</code>查看，可以看到软连接有自己的inode号，且不影响源文件的链接数，且文件大小也不一致：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(base) root<span class="meta">@Server</span>:~/test$ ls -li</span><br><span class="line">总用量 <span class="number">8</span></span><br><span class="line"><span class="number">926162</span> -rw-rw-r-- <span class="number">2</span> root root <span class="number">7</span> <span class="number">6</span>月  <span class="number">30</span> <span class="number">18</span>:<span class="number">22</span> a.txt</span><br><span class="line"><span class="number">926162</span> -rw-rw-r-- <span class="number">2</span> root root <span class="number">7</span> <span class="number">6</span>月  <span class="number">30</span> <span class="number">18</span>:<span class="number">22</span> hardlink_a</span><br><span class="line"><span class="number">926160</span> lrwxrwxrwx <span class="number">1</span> root root <span class="number">5</span> <span class="number">6</span>月  <span class="number">30</span> <span class="number">18</span>:<span class="number">24</span> symlink_a -&gt; a.txt</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>使用<code>cat a.txt</code>、<code>cat harlink_a</code>、<code>cat symlink_a</code>会发现三者内容完全一致。现在修改<code>a.txt</code>中的内容为&quot; <em>修改后的数据</em> &quot;，然后查看三个文件的内容，三者内容同样一致。同样的，<code>vim hardlink_a</code>或<code>vim symlink_a</code>一样会修改同样的数据区，<code>cat</code>出来的内容也是相同的。</li>
+<li>使用<code>rm a.txt</code>删除原文件，再使用<code>cat</code>指令打开两个链接文件，会发现软连接已经打不开了，而硬链接仍然可以打开。</li>
+</ol>
+<hr>
+<ul>
+<li>那么，软连接和硬链接的区别又在何处呢？</li>
+</ul>
+<p>事实上，硬链接得到的文件会与原文件保持样的数据尺寸(但并不意味着复制了一份原数据)、一样的数据权限、一样的inode号，没有额外的区块和inode占用消耗，一定程度上可以防止区块数据和inode被意外释放；而软连接申请了新的inode，并占用了一定的区块数据(数据量取决于原文件名，如<code>a.txt</code>共五个字符，则占用5B)，当原文件被删除，软连接也就无法打开了，这跟Windows中的表现是一致的。</p>
+<blockquote>
+<p>（在Linux中，如果区块数据没有任何一个inode链接到，则可以认为这些区块已经被释放）</p>
+</blockquote>
+<hr>
+<h1 id="硬盘管理"><a class="markdownIt-Anchor" href="#硬盘管理"></a> 硬盘管理</h1>
+<h2 id="认识硬盘"><a class="markdownIt-Anchor" href="#认识硬盘"></a> 认识硬盘</h2>
+<p>现代硬盘主要由柱头和碟片组成。为了高速的读写磁盘，人们设计了 <strong>MBR(Master Boor Record)</strong> ；随着硬盘容量的变大，2TB以上的硬盘采用 <strong>GPT(GUID partition table)</strong> 作为分区格式。这里主要介绍MBR。</p>
+<p>Linux通过把硬件当成一个文件的方式管理硬盘，如计算机挂载的第一个机械硬盘的文件地址为：<code>/dev/sda</code>。</p>
+<p>在MBR格式中，我们将MBR称为<strong>主引导记录</strong>，用于引导系统的启动。如果你尝试在一个硬盘中建立一个多操作系统的软件目录，会经常接触到MBR的内容。MBR的大小为448字节，它和 <strong>分区表(partition table)</strong> 组成了第一个扇区，分区表的大小为64KB，即第一个扇区的大小为512KB。</p>
+<ul>
+<li>相对的，GPT第一个扇区有4K字节，因此能够引导更大的磁盘。</li>
+</ul>
+<p>我们常说的分区，实际上只对分区表进行操作，同时只能记录划分为<strong>四组</strong>分区记录。但显然我们在Windows中常常用的硬盘分区多于4个区，这就要提到<strong>扩展分区</strong>和<strong>逻辑分区</strong>了：</p>
+<ul>
+<li>主要分区与扩展分区由于MBR格式的限制，它们合起来[最多]只能有四个；</li>
+<li>扩展分区在Linux中只能存在一个，它指向主要分区之外的区域，在区域中存在扩展分区的分区表，该表不受64KB的限制，因此可以指向很多个逻辑分区，即所有的逻辑分区组成了扩展分区。</li>
+</ul>
+<p>换句话说，受限于操作系统，以MBR格式为例，若一块硬盘设置了两个主分区，则一个硬盘的分区组成为：</p>
+ <table>
+	<tr>
+		<th rowspan="4">MBR 448KB</th>
+		<th colspan="6">分区表64KB</th>
+	</tr>
+	<tr>
+		<td rowspan="3">主分区1</td>
+		<td rowspan="3">主分区2</td>
+		<td colspan="4">扩展分区</td>
+	</tr>
+	<tr>
+		<td colspan="2">(原)主分区3</td>
+		<td colspan="2">(原)主分区4</td>
+	</tr>
+	<tr>
+		<td>逻辑分区1</td>
+		<td colspan="2">..........</td>
+		<td>逻辑分区n</td>
+	</tr>
+</table>
+<hr>
+<h2 id="系统启动引导bios与uefi"><a class="markdownIt-Anchor" href="#系统启动引导bios与uefi"></a> 系统启动引导：BIOS与UEFI</h2>
+<p>对于常装机的朋友来说，BIOS与UEFI并不陌生。这里只简单介绍：</p>
+<ul>
+<li>BIOS是写入固件程序，这里所说的固件指的是主板。因此BIOS是系统启动时第一个执行的程序，它会主动求搜寻MBR，然后按照引导信息去搜寻操作系统软件内容，最后启动我们所熟悉的操作系统。</li>
+<li>UEFI使用C语言写成(相对的BIOS基本是由汇编写成)，为了解决BIOS的一些缺点而提出；相对于写入固件的BIOS，它不需要第三方厂商支持就能部署，甚至在启动阶段就可以直接通过TCP/IP协议连上互联网，而不需要操作系统再次操作网卡硬件。某种意义上UEFI就是一个低级的操作系统。</li>
+</ul>
+<hr>
+<h2 id="硬盘状态查看"><a class="markdownIt-Anchor" href="#硬盘状态查看"></a> 硬盘状态查看</h2>
+<p><code>df</code>指令可以查看磁盘的使用量，为了方便阅读，常使用【-h】指令以GB为单位显示数据，用【-T】列出文件系统：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">(base) root<span class="meta">@Server</span>:~$ df -hT</span><br><span class="line">文件系统       类型      容量  已用  可用 已用% 挂载点</span><br><span class="line">udev           devtmpfs   <span class="number">32</span>G     <span class="number">0</span>   <span class="number">32</span>G    <span class="number">0</span>% /dev</span><br><span class="line">tmpfs          tmpfs     <span class="number">6.3</span>G  <span class="number">9.6</span>M  <span class="number">6.3</span>G    <span class="number">1</span>% /run</span><br><span class="line">/dev/nvme0n1p2 ext4      <span class="number">166</span>G   <span class="number">27</span>G  <span class="number">131</span>G   <span class="number">17</span>% /</span><br><span class="line">tmpfs          tmpfs      <span class="number">32</span>G   <span class="number">62</span>M   <span class="number">32</span>G    <span class="number">1</span>% /dev/shm</span><br><span class="line">tmpfs          tmpfs     <span class="number">5.0</span>M  <span class="number">4.0</span>K  <span class="number">5.0</span>M    <span class="number">1</span>% /run/lock</span><br><span class="line">tmpfs          tmpfs      <span class="number">32</span>G     <span class="number">0</span>   <span class="number">32</span>G    <span class="number">0</span>% /sys/fs/cgroup</span><br><span class="line">/dev/nvme0n1p1 vfat      <span class="number">511</span>M  <span class="number">3.6</span>M  <span class="number">508</span>M    <span class="number">1</span>% /boot/efi</span><br><span class="line">/dev/sda       ext4      <span class="number">2.7</span>T   <span class="number">37</span>G  <span class="number">2.6</span>T    <span class="number">2</span>% /data</span><br><span class="line">tmpfs          tmpfs     <span class="number">6.3</span>G   <span class="number">64</span>K  <span class="number">6.3</span>G    <span class="number">1</span>% /run/user/<span class="number">1000</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="硬盘分区-格式化-检验与挂载"><a class="markdownIt-Anchor" href="#硬盘分区-格式化-检验与挂载"></a> 硬盘分区、格式化、检验与挂载</h2>
+<h3 id="1-分区与格式化"><a class="markdownIt-Anchor" href="#1-分区与格式化"></a> ① 分区与格式化</h3>
+<p>使用<code>lsblk</code>（list block device的缩写）命令可以查看磁盘及其分区的列表：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT</span><br><span class="line">sda           <span class="number">8</span>:<span class="number">0</span>    <span class="number">0</span>   <span class="number">2.7</span>T  <span class="number">0</span> disk /data</span><br><span class="line">nvme0n1     <span class="number">259</span>:<span class="number">0</span>    <span class="number">0</span> <span class="number">232.9</span>G  <span class="number">0</span> disk </span><br><span class="line">├─nvme0n1p1 <span class="number">259</span>:<span class="number">1</span>    <span class="number">0</span>   <span class="number">512</span>M  <span class="number">0</span> part /boot/efi</span><br><span class="line">├─nvme0n1p2 <span class="number">259</span>:<span class="number">2</span>    <span class="number">0</span> <span class="number">168.5</span>G  <span class="number">0</span> part /</span><br><span class="line">└─nvme0n1p3 <span class="number">259</span>:<span class="number">3</span>    <span class="number">0</span>  <span class="number">63.9</span>G  <span class="number">0</span> part [SWAP]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用<code>fdisk</code>和<code>gdisk</code>可以分别在MBR及GPT文件系统上进行分区。这些命令都比较简单，按照相应的提示步骤操作即可。(可以试使用<code>fdisk -l</code>来查看硬盘的文件系统)。<a href="https://www.linuxidc.com/Linux/2018-06/152958.htm" target="_blank" rel="noopener">&gt;fdisk参考使用流程&lt;</a></li>
+<li>使用<code>mkfs.???</code>指令进行格式化：如果我们想把硬盘格式化为ext4格式，则使用<code>mkfs.ext4</code>进行格式化操作，相应的还有<code>mkfs.xfs</code>等命令。如<code>mkfs.ext4 /dev/sda</code>。</li>
+</ul>
+<h3 id="2-磁盘挂载与卸载"><a class="markdownIt-Anchor" href="#2-磁盘挂载与卸载"></a> ② 磁盘挂载与卸载</h3>
+<p>使用<code>mount /dev/sda /data</code>可以把设备<code>/dev/sda</code>挂载到<code>/data</code>目录下。<br>
+然而每次重新开机挂载信息就会丢失，所以我们需要把挂载信息写入<code>/etc/fstab</code>文件中：</p>
+<ol>
+<li>首先，使用<code>blkid</code>命令查看硬盘的UUID。</li>
+<li>使用<code>vim /etc/fstab</code>打开配置文件，在文末添加一行：<br>
+<code>&lt;fs spec&gt; &lt;fs file&gt; &lt;fs vfstype&gt; &lt;fs mntops&gt; &lt;fs freq&gt; &lt;fs passno&gt;</code>，如<code>UUID=06c17b55-521c-470d-aceb-69ab9be10e4b /data ext4 defaults 0 2</code>，具体配置内容参考下表。</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>值名</th>
+<th>值说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fs spec</td>
+<td>分区定位，可以给UUID或LABEL，例如：<code>UUID=06c17b55-521c-470d-aceb-69ab9be10e4b</code>或<code>LABEL=software</code></td>
+</tr>
+<tr>
+<td>fs file</td>
+<td>挂载点地址，如<code>/data</code></td>
+</tr>
+<tr>
+<td>fs vfstype</td>
+<td>系统格式</td>
+</tr>
+<tr>
+<td>fs mntops</td>
+<td>挂载参数，详见下</td>
+</tr>
+<tr>
+<td>fs freq</td>
+<td>磁盘备份，默认为0，表示不需要dump操作</td>
+</tr>
+<tr>
+<td>fs passno</td>
+<td>磁盘检查顺序，填0时表示不检测。大于0时，1 是root文件系统保留位，之后的数字越大检查顺序越靠后</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>参数值</th>
+<th>值说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>auto</td>
+<td>系统自动挂载，fstab默认就是这个选项</td>
+</tr>
+<tr>
+<td>defaults</td>
+<td>rw, suid, dev, exec, auto, nouser, and async.</td>
+</tr>
+<tr>
+<td>noauto</td>
+<td>开机不自动挂载</td>
+</tr>
+<tr>
+<td>nouser</td>
+<td>只有超级用户可以挂载</td>
+</tr>
+<tr>
+<td>ro</td>
+<td>按只读权限挂载</td>
+</tr>
+<tr>
+<td>rw</td>
+<td>按可读可写权限挂载</td>
+</tr>
+<tr>
+<td>user</td>
+<td>任何用户都可以挂载</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>请注意光驱和软驱只有在装有介质时才可以进行挂载，因此它必需填写noauto</p>
+</blockquote>
+<ol start="3">
+<li><code>mount -a</code>可以按<code>/etc/fstab</code>的配置挂载所有硬盘，一般也用来检测挂载配置的正确性。</li>
+</ol>
+<ul>
+<li>使用<code>umount /dev/sda</code>可以将各个挂载的设备卸载。</li>
+</ul>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/jinyecheng.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/juhuatai.mp3'></li>
+                        
+                    
+                        
+                            <li title='2' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/MapleStory.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='true'
+        data-ci='5b763306cd7b9d9c3981'
+        data-cs='c31e9bf78a807055f5439caea747b09d1d9c8f18'
+        data-r='image-blog.io'
+        data-o='WhiteRobe'
+        data-a='WhiteRobe'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#preliminaries"><span class="toc-number">1.</span> <span class="toc-text"> Preliminaries</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#文件系统"><span class="toc-number">2.</span> <span class="toc-text"> 文件系统</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#linux系统的文件属性"><span class="toc-number">2.1.</span> <span class="toc-text"> Linux系统的文件属性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-文件权限permission"><span class="toc-number">2.1.1.</span> <span class="toc-text"> ① 文件权限(permission)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-文件链接link-file"><span class="toc-number">2.1.2.</span> <span class="toc-text"> ② 文件链接(link file)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#linux系统中的文件权限管理"><span class="toc-number">2.2.</span> <span class="toc-text"> Linux系统中的文件权限管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件目录与配置-管理"><span class="toc-number">2.3.</span> <span class="toc-text"> 文件目录与配置、管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-filesystem-hierachy-standardfhs"><span class="toc-number">2.3.1.</span> <span class="toc-text"> ① Filesystem Hierachy Standard(FHS)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-文件目录管理"><span class="toc-number">2.3.2.</span> <span class="toc-text"> ② 文件目录管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-文件的创建-复制-删除与移动"><span class="toc-number">2.3.3.</span> <span class="toc-text"> ③ 文件的创建、复制、删除与移动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-文件的查找"><span class="toc-number">2.3.4.</span> <span class="toc-text"> ④ 文件的查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-环境变量-path"><span class="toc-number">2.3.5.</span> <span class="toc-text"> ⑤ 环境变量 $PATH</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件链接"><span class="toc-number">2.4.</span> <span class="toc-text"> 文件链接</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-索引式文件系统"><span class="toc-number">2.4.1.</span> <span class="toc-text"> ① 索引式文件系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-硬链接与软符号链接"><span class="toc-number">2.4.2.</span> <span class="toc-text"> ② 硬链接与软(符号)链接</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#硬盘管理"><span class="toc-number">3.</span> <span class="toc-text"> 硬盘管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#认识硬盘"><span class="toc-number">3.1.</span> <span class="toc-text"> 认识硬盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#系统启动引导bios与uefi"><span class="toc-number">3.2.</span> <span class="toc-text"> 系统启动引导：BIOS与UEFI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#硬盘状态查看"><span class="toc-number">3.3.</span> <span class="toc-text"> 硬盘状态查看</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#硬盘分区-格式化-检验与挂载"><span class="toc-number">3.4.</span> <span class="toc-text"> 硬盘分区、格式化、检验与挂载</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-分区与格式化"><span class="toc-number">3.4.1.</span> <span class="toc-text"> ① 分区与格式化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-磁盘挂载与卸载"><span class="toc-number">3.4.2.</span> <span class="toc-text"> ② 磁盘挂载与卸载</span></a></li></ol></li></ol></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+    <!--下悬浮返回键-->
+    <div style="background: white; height:30px; width: 30px; border-radius: 16px; position: fixed; bottom: 1.5rem; right: 1.5rem; border: 2px solid rgba(0, 0, 0, 0.5)">
+      <a class="icon-left image-icon" style="left:4px; top:4px" href="javascript:history.back()"></a>
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

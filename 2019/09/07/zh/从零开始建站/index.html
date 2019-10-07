@@ -1,0 +1,404 @@
+
+<!DOCTYPE html>
+<html lang="zh" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>从零开始的建站教程 - WhiteRobe&#39;s Blog</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.0/katex.min.css" rel="stylesheet">
+    <meta name="keywords" content="WhiteRobe, Blog,"> 
+    <meta name="description" content="着眼实例，从最简单的开始；你觉得再简单不过的东西，或许在别人眼里那就是悬崖。而我，愿作那攀岩绳。,
+编撰过程难免会有错误和遗漏，请feel free to pull request，帮助我进行修正、添加内容。
+维护地址2019TICWebsiteTrain
+
+ 基本概念
+ 网站结构
+我们常说的网,"> 
+    <meta name="author" content="WhiteRobe"> 
+    <link rel="alternative" href="atom.xml" title="WhiteRobe&#39;s Blog" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/fira_code.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+        <!--站内搜索API-->
+        <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/algolia-min.css" integrity="sha256-HB49n/BZjuqiCtQQf49OdZn63XuKFaxcIHWf0HNKte8=" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@3.4.0/dist/instantsearch.production.min.js" integrity="sha256-pM0n88cBFRHpSn0N26ETsQdwpA7WAXJDvkHeCLh3ujI=" crossorigin="anonymous"></script>
+    
+    <!-- <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+          // No more ads!
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script> -->
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">WhiteRobe&#39;s Blog</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block; display: block;position: fixed; top: 0px;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="https://blog.whiterobe.top"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">从零开始的建站教程</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div style="font-size: 1rem;margin-right: -10px">
+          分享此文：
+        </div>
+        <div>
+          <div class="share">
+              <a title="获取文章地址二维码" class="icon-scan" href="javascript:;"></a>
+          </div>
+          <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section" style="margin-top: 50px">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">从零开始的建站教程</h1>
+        <div class="stuff">
+            <span>九月 07, 2019</span>
+            <span id="busuanzi_container_page_pv" class="busuanzi_page" style="display:none">本文总阅读量<div id="busuanzi_value_page_pv" style="display: inline;">1</div>次</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/CDN/">CDN</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/建站/">建站</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/教程/">教程</a></li></ul>
+
+
+        </div>
+        <div class="low-resolution-warn-info">当前设备屏幕尺寸过小，推荐使用PC模式浏览。</div>
+        <div class="content markdown">
+            <blockquote>
+<p>编撰过程难免会有错误和遗漏，请feel free to <code>pull request</code>，帮助我进行修正、添加内容。<br>
+维护地址<a href="https://github.com/WhiteRobe/2019TICWebsiteTrain" target="_blank" rel="noopener">2019TICWebsiteTrain</a></p>
+</blockquote>
+<h1 id="基本概念"><a class="markdownIt-Anchor" href="#基本概念"></a> 基本概念</h1>
+<h2 id="网站结构"><a class="markdownIt-Anchor" href="#网站结构"></a> 网站结构</h2>
+<p>我们常说的网站一般会分为两个部分：</p>
+<ul>
+<li><strong>前端</strong>：在早年间主要指的是静态的UI界面，随着现代前端的发展，逐渐开始覆盖原有的后端业务；</li>
+<li><strong>后端</strong>：与数据库的交互等需要中央集成的业务，随着后端开发技术的发展，后端出现虚拟化的趋势，如RESTful等技术，直接将原本的后端业务伪装成“文件”以供泛前端应用的调用；</li>
+</ul>
+<p>但无论如何，我们访问到的任何一个网站，其数据文件都存储在一台“服务器”上。如果这台服务器暴露在公网之下，作为约定，在本篇文章中我们仅将这种情况下的“服务器”称为一台服务器——也就是说，我们暂且不讨论局域网内的服务器。</p>
+<blockquote>
+<p>而所谓“暴露在公网之下”，指的是这台服务器有一个全球唯一的IP地址，而不是<code>192.xxx.xxx.xxx</code>这类常见的内网地址。关于内外网IP地址和保留地址的划分，请自行百度。</p>
+</blockquote>
+<h2 id="bs架构的前后端分离"><a class="markdownIt-Anchor" href="#bs架构的前后端分离"></a> B/S架构的前后端分离</h2>
+<p>前后端分离的概念比较大，历史也比较悠久，我们抽简要的说。</p>
+<ul>
+<li>
+<p>网站开发方面(B/S)，以【JSP】为例，写过它的同学一定会记得<code>&lt;% System.out.println(&quot;Hello World&quot;) %&gt;</code>这种控制语句写得整个页面都是，非常视觉污染，同时要开发一个网页要同时会写JAVA、JavaScript，既当爹又当妈；而且如果代码质量不高，写这个页面的程序员跑路之后整个项目就会变成一座屎山，根本没人维护得来。有时候我们也把这种开发方式称为服务端渲染(SSR)。</p>
+</li>
+<li>
+<p>相对的，现在存在另外一种设计模式——单页面应用(SPA)。直观上理解，我们把前端的UI界面仿照C/S架构进行设计，即服务器将要给用户呈现的动态数据通过JSON等数据格式交给前端，前端再通过JS操作DOM完成页面的渲染。前后端的代码开发范围绝不重合，二者的唯一交互内容只有“协议通信接口”(或我们常说的API)。</p>
+</li>
+</ul>
+<p>这么说有点绕，我们画个图：</p>
+<p>未前端分离：</p>
+<p align="center">
+	<img src="./ssr.jpg">
+</p>
+<p>前后端分离：</p>
+<p align="center">
+	<img src="./spa.jpg">
+</p>
+<p>某种意义上我们基于B/S实现了C/S要做的事。</p>
+<blockquote>
+<p>注：SSR和SPA并不是区分是否前后端分离的标准。</p>
+</blockquote>
+<blockquote>
+<p>这里要感谢微软设计的AJAX，给前后端解耦提供了一种新的思路。请自行了解，不要只关心JQuery怎么调AJAX的API，要去理解它的设计思想。<br>
+<strong>AJAX = Asynchronous JavaScript and XML</strong></p>
+</blockquote>
+<h2 id="缓存技术"><a class="markdownIt-Anchor" href="#缓存技术"></a> 缓存技术</h2>
+<p>到这里一定会有一个疑问：每次访问一个网站都要临时拉取一个应用，岂不是会导致“网站打开的速度很慢”？</p>
+<p>理论上是的，但是9102年了，个人联网设备的性能和网络通信速度都比较高了，临时在浏览器端构建一个应用的代价并不会特别高；其次是现代前端、后端弄了很多奇技淫巧来提高这个过程的加载速度，例如PWA和Chrome Cache直接把一个网站的前端应用缓存到本地，每次打开一个打开过的网站时会基于差分技术比对不一样的地方，然后仅下载、加载发生变动的模块。</p>
+<ul>
+<li>直观上进行理解和解释，浏览器帮你像安装一个桌面应用一样把一个SPA安装到浏览器内部；每次打开网站时都执行一次类似“客户端更新”的操作，这样即保证了前端应用的打开速度也保证了前端应用的有效性。</li>
+</ul>
+<p>还有一个问题，如何保证第一次打开一个网站时不卡顿和后期“更新”操作的可靠性?</p>
+<ul>
+<li>这就得要归功于OSS、CDN等技术了，它使得我们从全世界任意一个地方的服务器的文件系统获取前端应用的文件变得非常快速。</li>
+</ul>
+<h2 id="dns-ip-端口和domain"><a class="markdownIt-Anchor" href="#dns-ip-端口和domain"></a> DNS、IP、端口和Domain</h2>
+<p>现在，我们对访问一个网站的流程要有一个直观上的理解：</p>
+<ol>
+<li>有一台服务器存放着网站所需的各种文件；</li>
+<li>它有一个全球唯一的IP，使得任何接入互联网的人都可以通过这个IP找到这个服务器；</li>
+<li>这个服务器可能除了存放网站所需的各种文件，还有其它对外开放的需求；所以约定某个端口(比如80端口)专门用于某个网站系统的对外通信；</li>
+<li>通过<code>IP:端口</code>的形式访问这个服务器，拉取网站文件；</li>
+<li>但是，这个IP太拗口了谁特喵记得住？于是我们约定一个域名(domain name)来标记这个IP，访问这个域名就等于直接访问这个IP，也就是这个服务器；</li>
+</ol>
+<p>整个流程链条如下：</p>
+<p><code>用户</code>-<code>域名(可选)</code>-<code>IP+端口</code>-<code>服务器在该端口开放的文件系统</code>-<code>网站应用的各类数据</code></p>
+<h2 id="域名与dns解析"><a class="markdownIt-Anchor" href="#域名与dns解析"></a> 域名与DNS解析</h2>
+<p>IP、端口都非常容易理解，重点要说一下域名和DNS；</p>
+<p><strong>① 域名(Domain Name)</strong></p>
+<p>域名从【最后一位】开始读，我们以<code>www.github.com</code>举例子：</p>
+<ol>
+<li><code>.com</code>在最后一位，是【顶级域名】(Top-level domains，TLDs)；</li>
+</ol>
+<p>我们常见的<code>.com</code>就是<code>commerce</code>的缩写，一般是商业机构进行申请的；还有很多各种各样的域名，它们各自的意义你可以自行百度到。</p>
+<p>特别的是，例如<code>xxxx.com.cn</code>、<code>xxxx.gov.cn</code>的域名，我们一般也把<code>.com.cn</code>认为是顶级域名；这个跟国家有关，一般人买不到也买不起。（我习惯把这种情况叫<code>.gov</code>和<code>.com</code>为一级域名）</p>
+<p>顶级域名都是定好的，作为普通人我们只能选择一个而不能自定义。</p>
+<ol start="2">
+<li><code>.github</code>是二级域名(SLD，second-level domain)；</li>
+</ol>
+<p>比较特殊的，按照我个人习惯我会自动忽略把它称为“一级域名”的说法，具体说法的出处我也记不清了；反正每年看教材都有变化，不用太细究。</p>
+<p>我们申请域名时能够自定义的就是这个位置的域名，是<strong>我们需要重点关注</strong>的内容。</p>
+<p>可以开放申请的就是从二级域名往上的域名(子域名)，我们申请时只要获得二级域名，其后的所有域名不需要再次申请，统统交由DNS系统自行注册申请。</p>
+<ol start="3">
+<li><code>www</code>是主机名，有时候也叫记录名。大部分情况下，不管域名多长，除二级域名之外，排在最前面的就是主机名。</li>
+</ol>
+<p>大部分情况下一个网站把主机名写为<code>www</code>并没有什么特别的业务需求或协议需求，往往就是习惯的操作和纪念性的操作而已。</p>
+<p><strong>② 域名系统/网域名称系统(Domain Name System)</strong></p>
+<p>据说全球只有13台DNS根服务器(全放在美帝)，大部分情况下你无法接触到这些DNS根服务器，它们只接收区域性的ISP访问；</p>
+<p>你的网络提供商(在中国就是电信、移动和联通)搭建了它们的DNS服务器，帮助你转交你的域名解析请求。这些服务器的IP大部分情况下你的网络提供商（ISP）自动提供——比如用电信、校园网进行PPPOE拨号时，都是自动获取或DHCP得到的。</p>
+<p>以访问<code>www.github.com</code>为例子：(我们假设现在所有的DNS服务器里都没有缓存数据)</p>
+<ol>
+<li>由于我们大部份人没有自己的DNS服务器，我们以ISP的DNS服务器作为例子；</li>
+<li>首先解析<code>.com</code>，电脑从ISP处得到它DNS服务器的IP，然后向该ISP的DNS服务器发送解析请求；由于此时不存在缓存数据，因此ISP的DNS服务器会向上级——也就是根服务器转发请求；</li>
+<li>ISP得到根服务器的回应，询问记录了<code>.com</code>的服务器知不知道<code>.github</code>的IP存在哪里；</li>
+<li>(开始无限递归，直到查询到主机名，在本例子中，实际上到第三步就已经结束DNS的查询过程)</li>
+<li>得知<code>github.com</code>的ip为<code>185.199.108.153</code>，于是我们实际上访问的是<code>http://185.199.108.153:80</code>；(80是默认端口，因此可以直接省略)</li>
+</ol>
+<p>你一定会问<code>www</code>呢？还有个主机名呢？</p>
+<h2 id="记录"><a class="markdownIt-Anchor" href="#记录"></a> 记录</h2>
+<p>正如前文说过的，主机名实际上是个非常无所谓的值，我们访问一个网址重要的是IP，只要我们愿意，我们可以把任意主机名映射到同一个IP上。</p>
+<p>那么该怎么做这种主机到IP的映射呢？我们接下来要说两个比较重要的DNS记录值。</p>
+<p>假如我们现在买了一个域名：<code>xdtic.club</code>，但是还没有分配它的ip和主机名。</p>
+<p><strong>A记录和AAAA记录</strong>：指向一个IP。(A: Address Record)</p>
+<p>我们以域名<code>xdtic.club</code>为例子，当我设置了一个A记录，标记了主机名为<code>www</code>，IP为<code>222.25.173.22</code>，那么，当我们访问<code>www.xdtic.club</code>时就会跳转到<code>222.25.173.22</code>。</p>
+<p align="center">
+	<img src="./a-record.jpg">
+</p>
+<p>而AAAA和A的区别就在于前者指向一个IPv6地址而后者指向IPv4。</p>
+<blockquote>
+<p>注意:你也可以直接把域名<code>xdtic.club</code>映射到某个IP而不添加任何主机名。规则如下:</p>
+</blockquote>
+<p align="center">
+	<img src="./host.jpg">
+</p>
+<p><strong>CNAME</strong>：别名记录，指向一个域名。(CNAME: Canonical Name Record)</p>
+<p>还是以域名<code>xdtic.club</code>为例子，我们添加一个主机名<code>io</code>作为CNAME，映射域名为<code>whiterobe.github.io</code>，假设<code>whiterobe.github.io</code>会被解析为IP<code>185.199.108.153</code>，那么域名<code>io.xdtic.club</code>就会被二次映射到<code>185.199.108.153</code>。</p>
+<p align="center">
+	<img src="./cname-record.jpg">
+</p>
+<blockquote>
+<p>还有很多种DNS记录值，但其它的记录值我们暂时不关心。</p>
+</blockquote>
+<h1 id="练习建立一个网站"><a class="markdownIt-Anchor" href="#练习建立一个网站"></a> 练习：建立一个网站</h1>
+<p>现在，我们要从零开始建立一个运行在公网之上的静态网站(个人简历站)，最终效果为：</p>
+<p align="center">
+	<img src="./template.jpg">
+</p>
+<p>当然，作为一次练习，我们的目标是不花一分钱。</p>
+<h2 id="github-pages"><a class="markdownIt-Anchor" href="#github-pages"></a> Github Pages</h2>
+<p>首先，我们要解决一下服务器的问题。</p>
+<p>上面我们说过，一个网站需要一个运行在公网之上的服务器，我们需要把网站相关的文件存储到这台服务器上，这个接入互联网的用户才能访问到这个网页。</p>
+<p>最直接的方法是去阿里云、腾讯云等云服务器商购买一台服务器；但我们的目标是不花一分钱，因此我们可以借助Github的服务器。</p>
+<p>因此，你需要了解一下<a href="https://github.com/WhiteRobe/TIC2019GitTrain/blob/master/articles/github_pages.md" _blank="target" rel="noopener" target="_blank">Github Pages</a>。</p>
+<p>非常简单，基本上按照上文的指引来都能完成；不过我们需要进行一些酷炫的操作。</p>
+<ol>
+<li>在Github上创建一个库，<a href="./templated-privy.zip">下载简历模板</a>，push到这个仓库。(你可以做一些小修改)</li>
+<li>创建Github Pages。</li>
+<li>稍等三分钟，访问<code>https://&lt;your-github-id&gt;.github.io/&lt;repo-name&gt;</code>，你就会看到你的简历被post到公网之上了。</li>
+<li>你之后可以修改简历，然后push到这个仓库，再刷新页面，你的简历页面就变了。</li>
+</ol>
+<blockquote>
+<p>如果你对前端熟悉，你甚至可以编写一些更酷炫的站点！这里我推荐一个静态页面设计网站：<a href="https://templated.co/" target="_blank" rel="noopener">https://templated.co/</a>！免费！好看！收藏夹！</p>
+</blockquote>
+<h2 id="cdn加速"><a class="markdownIt-Anchor" href="#cdn加速"></a> CDN加速</h2>
+<p>你一定会发现一个问题，如果借用的是Github的服务器，访问速度就非常慢；解决方案有很多，比如利用国内的Gitee来取代Github，或者是我们需要重点推荐的CDN。</p>
+<p>CDN，内容分发网络，我简要介绍一下这个东西：</p>
+<ul>
+<li>直观上理解，如果服务器在国外，由于光的速度总是有限的，加上路由跳点等等等问题，当你访问一个与你相隔非常远的服务器，实际上速度是非常低的。CDN服务公司会在全球修建各类站点，当你在中国访问了美国的服务器，第一次访问可能会非常慢，但是CDN网络会把数据拉取到你附近的服务器上，下次访问你就会获得更快的速度。</li>
+</ul>
+<p>你可能想问，我的浏览器不也能缓存么？那我要CDN做什么。</p>
+<p>CDN牛逼的地方不只是在你访问时能缓存，你身边的某个人访问过这个站点，他附近的人都能得到缓存的加速BUFF。</p>
+<p>同样，你可以到阿里云、腾讯云购买CDN服务，半年十几块钱，相当便宜。但我这里推荐一个不收费的国际顶级CDN服务商：<a href="www.cloudflare.com">CloudFlare</a>，注册只需要一个邮箱即可。</p>
+<p>但在此之前，我们需要一个域名，并且知道如何解析一个域名。</p>
+<h2 id="购买域名"><a class="markdownIt-Anchor" href="#购买域名"></a> 购买域名</h2>
+<blockquote>
+<p>之所以需要购买域名的原因在于CDN需要自定义DNS，因此你需要拥有一个自己的域名才能控制由哪个DNS来解析这个网址。</p>
+</blockquote>
+<p>要用CDN加速，你需要购买一个域名，很便宜，阿里云或者腾讯云委托购买，9￥一年。</p>
+<p>以阿里云为例子：</p>
+<p>当你购买一个域名之后，你会在控制台看到你的域名：</p>
+<p align="center">
+	<img src="./aliyun-1.jpg">
+</p>
+<p>阿里云购买的域名，阿里云默认提供了国内的DNS服务器为你解析这个域名，我们现在这里学习如何解析DNS并绑定到刚刚建立的Github。点击解析，会进入阿里云的DNS服务(阿里云提供了免费的解析服务)：</p>
+<p align="center">
+	<img src="./deploy.jpg">
+</p>
+<p>进入解析界面：</p>
+<p align="center">
+	<img src="./jiexi2.jpg">
+</p>
+<p>我们选择CNAME，把你的域名映射到你的Github Pages。(还记得CNAME是域名到域名的映射吗？)</p>
+<p>例如你买的域名是<code>cool.top</code>，这里的主机记录填的是<code>profile</code>，那么<code>profile.cool.top</code>就会被映射到<code>&lt;your-github-id&gt;.github.io</code>。</p>
+<h2 id="自定义github-pages"><a class="markdownIt-Anchor" href="#自定义github-pages"></a> 自定义Github Pages</h2>
+<p>我们实际上并不太喜欢<code>&lt;your-github-id&gt;.github.io</code>这样的域名，显得很Low，我们想用我们购买的域名替代Github给我们分配的域名，该怎么做呢？</p>
+<p>现在，给你的Github Pages填写刚刚做好CNAME记录的域名：<code>profile.cool.top</code>：</p>
+<p align="center">
+	<img src="./custom-domain.jpg">
+</p>
+<blockquote>
+<p>理论上，Github会为我们默认生成一次<code>commit</code>，在仓库的index.html同级地址下添加一个<code>CNAME</code>文件，用以指示映射别名。(这是Github的特殊环境需求，其它系统可能没有)<br>
+最好我们手动建立一个<code>CNAME</code>纯文本文件在仓库中，内容就是<code>profile.cool.top</code>，然后PUSH到Github仓库。</p>
+</blockquote>
+<p>喝杯咖啡，你就会发现，访问<code>https://profile.cool.top</code>会看到刚刚访问<code>https://&lt;your-github-id&gt;.github.io/&lt;repo&gt;</code>的页面。</p>
+<h2 id="内容分发网络"><a class="markdownIt-Anchor" href="#内容分发网络"></a> 内容分发网络</h2>
+<p>说了一大圈，我们终于要回到CDN了。</p>
+<p>首先，我们需要打开CloudFlare，进入控制台：</p>
+<p align="center">
+	<img src="./cloudflare-1.jpg">
+</p>
+<p>我们回到我们的ISP的页面(比如我们从阿里云购买了域名，那就是阿里云)，我们需要修改解析这个域名的DNS。(之前提过阿里云给我们默认分配了它的DNS服务器)：</p>
+<p align="center">
+	<img src="./aliyun-1.jpg">
+</p>
+<p>点击【管理】，然后你会看到：</p>
+<p align="center">
+	<img src="./modify-dns.jpg">
+</p>
+<p>修改为CloudFlare的DNS服务器。我们需要等待全球DNS刷新记录，一般半个小时到一天，看运气。</p>
+<p>然后在CloudFlare的DNS控制台配置CNAME，和刚刚在阿里云配置的差不多。</p>
+<p>在以上过程完成后，我们可以尝试ping一下你的域名，你会发现这时不再是直接访问Github的服务器IP了(185.199.108.15*)，而是CloudFlare的加速网络。</p>
+<p>让我们再在<a href="http://tool.chinaz.com/speedtest/" target="_blank" rel="noopener">站长之家</a>看一下效果：</p>
+<p align="center">
+	<img src="./speed-up.jpg">
+</p>
+<p>祖国河山一片绿，加速效果还是非常明显的。你还可以从控制台看到访问量和CDN的加速效果:</p>
+<p align="center">
+	<img src="./cdn.jpg">
+</p>
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/jinyecheng.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/juhuatai.mp3'></li>
+                        
+                    
+                        
+                            <li title='2' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/MapleStory.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='true'
+        data-ci='5b763306cd7b9d9c3981'
+        data-cs='c31e9bf78a807055f5439caea747b09d1d9c8f18'
+        data-r='image-blog.io'
+        data-o='WhiteRobe'
+        data-a='WhiteRobe'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#基本概念"><span class="toc-number">1.</span> <span class="toc-text"> 基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#网站结构"><span class="toc-number">1.1.</span> <span class="toc-text"> 网站结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bs架构的前后端分离"><span class="toc-number">1.2.</span> <span class="toc-text"> B/S架构的前后端分离</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缓存技术"><span class="toc-number">1.3.</span> <span class="toc-text"> 缓存技术</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dns-ip-端口和domain"><span class="toc-number">1.4.</span> <span class="toc-text"> DNS、IP、端口和Domain</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#域名与dns解析"><span class="toc-number">1.5.</span> <span class="toc-text"> 域名与DNS解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#记录"><span class="toc-number">1.6.</span> <span class="toc-text"> 记录</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#练习建立一个网站"><span class="toc-number">2.</span> <span class="toc-text"> 练习：建立一个网站</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#github-pages"><span class="toc-number">2.1.</span> <span class="toc-text"> Github Pages</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cdn加速"><span class="toc-number">2.2.</span> <span class="toc-text"> CDN加速</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#购买域名"><span class="toc-number">2.3.</span> <span class="toc-text"> 购买域名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义github-pages"><span class="toc-number">2.4.</span> <span class="toc-text"> 自定义Github Pages</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内容分发网络"><span class="toc-number">2.5.</span> <span class="toc-text"> 内容分发网络</span></a></li></ol></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+    <!--下悬浮返回键-->
+    <div style="background: white; height:30px; width: 30px; border-radius: 16px; position: fixed; bottom: 1.5rem; right: 1.5rem; border: 2px solid rgba(0, 0, 0, 0.5)">
+      <a class="icon-left image-icon" style="left:4px; top:4px" href="javascript:history.back()"></a>
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

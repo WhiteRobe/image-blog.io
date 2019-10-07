@@ -1,0 +1,560 @@
+
+<!DOCTYPE html>
+<html lang="zh" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Docker官方起步指南学习笔记②——容器及Dockerfile - WhiteRobe&#39;s Blog</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.0/katex.min.css" rel="stylesheet">
+    <meta name="keywords" content="WhiteRobe, Blog,"> 
+    <meta name="description" content="着眼实例，从最简单的开始；你觉得再简单不过的东西，或许在别人眼里那就是悬崖。而我，愿作那攀岩绳。,本学习笔记 Base on ——
+
+&amp;gt;Get Started With Docker&amp;lt;
+
+
+ 容器及其相关
+容器是一个映像的实例，是APP运行的底层基础。
+
+ 从Dockerfile构建,"> 
+    <meta name="author" content="WhiteRobe"> 
+    <link rel="alternative" href="atom.xml" title="WhiteRobe&#39;s Blog" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/fira_code.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+        <!--站内搜索API-->
+        <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/algolia-min.css" integrity="sha256-HB49n/BZjuqiCtQQf49OdZn63XuKFaxcIHWf0HNKte8=" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@3.4.0/dist/instantsearch.production.min.js" integrity="sha256-pM0n88cBFRHpSn0N26ETsQdwpA7WAXJDvkHeCLh3ujI=" crossorigin="anonymous"></script>
+    
+    <!-- <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+          // No more ads!
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script> -->
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">WhiteRobe&#39;s Blog</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block; display: block;position: fixed; top: 0px;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="https://blog.whiterobe.top"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">Docker官方起步指南学习笔记②——容器及Dockerfile</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div style="font-size: 1rem;margin-right: -10px">
+          分享此文：
+        </div>
+        <div>
+          <div class="share">
+              <a title="获取文章地址二维码" class="icon-scan" href="javascript:;"></a>
+          </div>
+          <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section" style="margin-top: 50px">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">Docker官方起步指南学习笔记②——容器及Dockerfile</h1>
+        <div class="stuff">
+            <span>九月 12, 2019</span>
+            <span id="busuanzi_container_page_pv" class="busuanzi_page" style="display:none">本文总阅读量<div id="busuanzi_value_page_pv" style="display: inline;">1</div>次</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/Docker/">Docker</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/版本控制/">版本控制</a></li></ul>
+
+
+        </div>
+        <div class="low-resolution-warn-info">当前设备屏幕尺寸过小，推荐使用PC模式浏览。</div>
+        <div class="content markdown">
+            <p>本学习笔记 Base on ——</p>
+<blockquote>
+<p>&gt;<a href="https://docs.docker.com/get-started/part2/" target="_blank" rel="noopener">Get Started With Docker</a>&lt;</p>
+</blockquote>
+<hr>
+<h1 id="容器及其相关"><a class="markdownIt-Anchor" href="#容器及其相关"></a> 容器及其相关</h1>
+<p>容器是一个映像的实例，是APP运行的底层基础。</p>
+<hr>
+<h2 id="从dockerfile构建容器"><a class="markdownIt-Anchor" href="#从dockerfile构建容器"></a> 从Dockerfile构建容器</h2>
+<blockquote>
+<p><strong>Dockerfile</strong> 定义了容器内的环境，它提供了对硬件及网络的虚拟化接入定义标准，告知Docker复制哪些文件到该环境中及相应的交互方式。</p>
+</blockquote>
+<ol>
+<li>Dockerfile 创建一个环境总是基于某个基准映像，如<code>python:2.7-slim</code>，在编码规范上，提倡<strong>所有Dockerfile关键字采用大写</strong>。</li>
+<li>不提倡将Dockerfile命名为除<code>Dockerfile</code>之外的名字，除非一个文件夹下存在多个Dockerfile文件。若同一目录下存在多个Dockerfile文件，建议采用<code>Dockerfile.second</code>、<code>Dockerfile.server</code>等方式命名。</li>
+<li>Dockerfile的编写思想，应参照<strong>自动化</strong>的思想，即无交互式的Docker构建过程。其次，应使用 <code>\</code> 将过长的命令分行。更多编码规范可<a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/" target="_blank" rel="noopener">&gt;参见此处&lt;</a>。</li>
+</ol>
+<h3 id="dockerfile指令"><a class="markdownIt-Anchor" href="#dockerfile指令"></a> Dockerfile指令</h3>
+<p><strong><span id="cmd">指令列表</span></strong></p>
+<table>
+<thead>
+<tr>
+<th><a href="#from">1.FROM</a></th>
+<th><a href="#volume">10.VOLUME</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#maintainer">2.MAINTAINER</a></td>
+<td><a href="#user">11.USER</a></td>
+</tr>
+<tr>
+<td><a href="#run">3.RUN</a></td>
+<td><a href="#workdir">12.WORKDIR</a></td>
+</tr>
+<tr>
+<td><a href="#env">4.ENV</a></td>
+<td><a href="#onbuild">13.ONBUILD</a></td>
+</tr>
+<tr>
+<td><a href="#copy">5.COPY</a></td>
+<td><a href="#label">14.LABEL</a></td>
+</tr>
+<tr>
+<td><a href="#add">6.ADD</a></td>
+<td><a href="#arg">15.ARG</a></td>
+</tr>
+<tr>
+<td><a href="#expose">7.EXPOSE</a></td>
+<td><a href="#stopsignal">16.STOPSIGNAL</a></td>
+</tr>
+<tr>
+<td><a href="#cmdcmd">8.CMD</a></td>
+<td><a href="#healthcheck">17.HEALTHCHECK</a></td>
+</tr>
+<tr>
+<td><a href="#entrypoint">9.ENTRYPOINT</a></td>
+<td><a href="#shell">18.SHELL</a></td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li><strong><span id="from">FROM</span></strong></li>
+</ol>
+<blockquote>
+<p>表示从某个基础映像构建新的映像，其必为整个Dockerfile的<strong>第一句</strong>有效命令。</p>
+</blockquote>
+ <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> &lt;imagesName:tag&gt;</span><br></pre></td></tr></table></figure>
+<p><a href="#cmd">Back</a></p>
+<ol start="2">
+<li><strong><span id="maintainer">MAINTAINER&lt;/&gt;</span></strong></li>
+</ol>
+<blockquote>
+<p>表示维护者的信息。非必需语句。</p>
+</blockquote>
+ <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">MAINTAINER</span> Name &lt;Email&gt;</span><br></pre></td></tr></table></figure>
+<p><a href="#cmd">Back</a></p>
+<ol start="3">
+<li><strong><span id="run">RUN</span></strong></li>
+</ol>
+<blockquote>
+<p>用来在Docker的编译环境中运行指定命令，其在shell或exec的环境下执行。<br>
+如exec格式：<code>RUN [&quot;程序名&quot;,&quot;参数1&quot;,&quot;参数2&quot;]</code></p>
+</blockquote>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">RUN</span><span class="bash"> <span class="built_in">echo</span> hello-docker</span></span><br></pre></td></tr></table></figure>
+<p><a href="#cmd">Back</a></p>
+<ol start="4">
+<li><strong><span id="env">ENV</span></strong></li>
+</ol>
+<blockquote>
+<p>用于设置环境变量，该变量可在后续任何<strong>RUN</strong>指令和容器中使用。<br>
+<code>ENV &lt;key&gt; &lt;value&gt;</code></p>
+</blockquote>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ENV</span> val hello-docker</span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> <span class="built_in">echo</span> <span class="variable">$val</span></span></span><br></pre></td></tr></table></figure>
+<p><a href="#cmd">Back</a></p>
+<ol start="5">
+<li><strong><span id="copy">COPY</span></strong></li>
+</ol>
+<blockquote>
+<p>用来将本地（宿主机）的文件复制到映像的指定路径下。<br>
+<code>COPY &lt;本地地址&gt; &lt;映像地址&gt;</code></p>
+</blockquote>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">COPY</span><span class="bash"> /<span class="built_in">local</span>/path/flie /image/path/file</span></span><br></pre></td></tr></table></figure>
+<p><a href="#cmd">Back</a></p>
+<ol start="6">
+<li><strong><span id="add">ADD</span></strong></li>
+</ol>
+<blockquote>
+<p>与COPY类似，将某个URL地址的资源下载到映像指定位置。</p>
+</blockquote>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ADD</span><span class="bash"> latest.tar.gz /image/path.file</span></span><br></pre></td></tr></table></figure>
+<p><a href="#cmd">Back</a></p>
+<ol start="7">
+<li><strong><span id="expose">EXPOSE</span></strong></li>
+</ol>
+<blockquote>
+<p>暴露指定的端口，指明映像/容器中的应用将会侦听某个端口；或用于多容器间的通信。<br>
+<code>EXPOSE &lt;端口1&gt; [&lt;端口2&gt;...]</code></p>
+</blockquote>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">EXPOSE</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
+<p><a href="#cmd">Back</a></p>
+<ol start="8">
+<li><strong><span id="cmdcmd">CMD</span></strong></li>
+</ol>
+<blockquote>
+<p>该指令指明了容器默认的执行指令。一般用于在整个Dockerfile完成所有环境的安装与配置之后的最后一道指令。<br>
+<code>CMD [&quot;executable&quot;,&quot;param1&quot;,&quot;param2&quot;]</code><br>
+<strong>注意</strong>：一个Dockerfile只允许使用一次CMD指令，并以最后一个CMD指令为最终需要执行的指令。<br>
+另外，docker run命令将会<strong>覆盖</strong>CMD命令，此时其与ENTRYPOINT的功能相似。如对于下面的代码，若映像名为image-test，当运行<code>docker run image-test echo &quot;new hello world&quot;</code>，将会输出&quot;new hello world&quot;而不是&quot;hello ubantu&quot;。</p>
+</blockquote>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu</span><br><span class="line"><span class="keyword">CMD</span><span class="bash"> [<span class="string">"echo"</span>,<span class="string">"hello ubuntu"</span>]</span></span><br></pre></td></tr></table></figure>
+<p><a href="#cmd">Back</a></p>
+<ol start="9">
+<li><strong><span id="entrypoint">ENTRYPOINT</span></strong></li>
+</ol>
+<blockquote>
+<p>用于向容器内赋参数，相当于把容器当成一个程序使用。</p>
+</blockquote>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu</span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="bash"> [<span class="string">"echo"</span>]</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run image-test "Hello world!"</span><br></pre></td></tr></table></figure>
+<p>这时将会输出<code>&quot;Hello world!&quot;</code></p>
+<p><a href="#cmd">Back</a></p>
+<ol start="10">
+<li><strong><span id="volume">VOLUME</span></strong></li>
+</ol>
+<blockquote>
+<p>该指令用于向映像/容器内添加设置数据卷，以实现数据的共享、备份、迁移等。<br>
+<strong>注意</strong>：数据卷将会已知存在，知道没有任何容器使用它；此时，它对于宿主机而言还是一个普通文件，不会随着容器的停用而被销毁。<br>
+<code>VOLUME [&quot;/data&quot;, &quot;/data2&quot;]</code></p>
+</blockquote>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu</span><br><span class="line"><span class="keyword">VOLUME</span><span class="bash"> /app</span></span><br><span class="line"><span class="keyword">CMD</span><span class="bash"> [<span class="string">"cat"</span>, <span class="string">"/app/test.txt"</span>]</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm -v /app test.txt</span><br></pre></td></tr></table></figure>
+<p>将会输出宿主机<code>/app/test.txt</code>中的内容。</p>
+<p><a href="#cmd">Back</a></p>
+<ol start="11">
+<li><strong><span id="user">USER</span></strong></li>
+</ol>
+<blockquote>
+<p>指定运行容器时的默认用户(默认为root)。<br>
+<code>USER user[:group]</code><br>
+<code>USER uid:gid</code></p>
+</blockquote>
+<p><a href="#cmd">Back</a></p>
+<ol start="12">
+<li><strong><span id="workdir">WORKDIR</span></strong></li>
+</ol>
+<blockquote>
+<p>设置工作目录，指定RUN、CMD、ENTRYPOINT的工作路径。<br>
+<code>WORDDIR &lt;PATH&gt;</code><br>
+<strong>注意</strong>：若多次重复指令(后几个路径必为相对路径)，则最终路径为其组合，例如：</p>
+</blockquote>
+ <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /a</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> b</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> c</span></span><br></pre></td></tr></table></figure>
+<p>等效于<code>WORKDIR /a/b/c</code>。</p>
+<p><a href="#cmd">Back</a></p>
+<ol start="13">
+<li><strong><span id="onbuild">ONBUILD</span></strong></li>
+</ol>
+<blockquote>
+<p>设置二次映像构建时的执行指令。其在当前dockerfile进行构建时并不执行，而在基于该映像的子映像构建时执行。<br>
+<strong>注意</strong>：ONBUILD后不应存在FROM和MAINTAINER指令。</p>
+</blockquote>
+ <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> busybox</span><br><span class="line"><span class="keyword">ONBUILD</span> <span class="keyword">RUN</span><span class="bash"> <span class="built_in">echo</span> <span class="string">"Now it works!"</span></span></span><br></pre></td></tr></table></figure>
+<p><a href="#cmd">Back</a></p>
+<ol start="14">
+<li><strong><span id="label">LABEL</span></strong></li>
+</ol>
+<blockquote>
+<p>添加元数据到映像。尽量只使用一个标签LABEL。<br>
+<code>LABEL &lt;label&gt;=&lt;value&gt; [&lt;label&gt;=&lt;value&gt;....]</code></p>
+</blockquote>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">LABEL</span><span class="bash"> multi.label1=<span class="string">"label1"</span> \ </span></span><br><span class="line">	  multi.label2=<span class="string">"label2"</span></span><br></pre></td></tr></table></figure>
+<p><a href="#cmd">Back</a></p>
+<ol start="15">
+<li><strong><span id="arg">ARG</span></strong></li>
+</ol>
+<blockquote>
+<p>构建变量，该变量与ENV构建的环境变量不同，只能在Dockerfile内起效。<br>
+<code>ARG &lt;key&gt; &lt;value&gt;</code></p>
+</blockquote>
+<p><a href="#cmd">Back</a></p>
+<ol start="16">
+<li><strong><span id="stopsignal">STOPSIGNAL</span></strong></li>
+</ol>
+<blockquote>
+<p>允许用户定制化运行docker stop时的信号。</p>
+</blockquote>
+<figure class="highlight docker"><figcaption><span>file</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">STOPSIGNAL</span> SIGNALKILL</span><br></pre></td></tr></table></figure>
+<p><a href="#cmd">Back</a></p>
+<ol start="17">
+<li><strong><span id="healthcheck">HEALTHCHECK</span></strong></li>
+</ol>
+<blockquote>
+<p>用于检测映像的状态。<br>
+<code>HEALTHCHEK [OPTION] CMD command</code>，配置项包括：</p>
+<ul>
+<li><code>--interval=DURATION</code> 用于指定容器启动多久后开始自建，默认30s。</li>
+<li><code>--tiemout=DURATION</code> 设置超时时间，默认30s。</li>
+<li><code>--retries=N</code> 设置充实次数，默认3次。</li>
+</ul>
+</blockquote>
+ <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">HEALTHCHECK</span><span class="bash"> --interval=5m --timeout=3s CMD [<span class="string">"echo"</span>, <span class="string">"we cool!"</span>]</span></span><br></pre></td></tr></table></figure>
+<p><a href="#cmd">Back</a></p>
+<ol start="18">
+<li><strong><span id="shell">SHELL</span></strong></li>
+</ol>
+<blockquote>
+<p>Docker构建时默认使用<code>/bin/sh</code>作为shell环境(windows下是cmd)，该配置项可以修改其shell环境。</p>
+</blockquote>
+ <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHELL</span><span class="bash"> [<span class="string">"powershell"</span>, <span class="string">"-command"</span>]</span></span><br></pre></td></tr></table></figure>
+<p><a href="#cmd">Back</a></p>
+<hr>
+<h2 id="从容器到映像"><a class="markdownIt-Anchor" href="#从容器到映像"></a> 从容器到映像</h2>
+<p>从Dockerfile完成容器(及其内部应用的部署)的构建之后，还可以选择将其打包为一个映像(Image)，将其发布到<strong>DockerHub</strong>上，实现轻量级的应用移动和部署。</p>
+<h3 id="使用docker-build-命令进行打包"><a class="markdownIt-Anchor" href="#使用docker-build-命令进行打包"></a> 使用docker build 命令进行打包</h3>
+<blockquote>
+<p><code>docker build [OPTIONS] PATH | URL | -</code>，常用指令有：</p>
+<ul>
+<li>-c 控制CPU的使用数</li>
+<li>-f – file &lt;string&gt; 选则所使用的Dockerfile</li>
+<li>-m --memory  &lt;value&gt; 设置内存使用上限</li>
+<li>-q --quite 不显示构建过程的日志输出</li>
+<li>-t --tag  &lt;value&gt; 为映像打上标签</li>
+</ul>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build --tag=myImage:v0.01</span><br></pre></td></tr></table></figure>
+<h3 id="发布image"><a class="markdownIt-Anchor" href="#发布image"></a> 发布Image</h3>
+<blockquote>
+<p>需要拥有DockerHub的账号，并利用<code>docker login</code>指令登录服务器之后，利用<code>docker push</code>指令发布。在发布前，利用<code>docker tag</code>指令为映像打上标签。</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker tag myImage myUserName/myRepository:tag</span><br><span class="line">docker push myUserName/myRepository:tag</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="容器基本操作"><a class="markdownIt-Anchor" href="#容器基本操作"></a> 容器基本操作</h2>
+<h3 id="常用指令列表"><a class="markdownIt-Anchor" href="#常用指令列表"></a> 常用指令列表</h3>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>attach</td>
+<td>依附到正在运行的容器</td>
+</tr>
+<tr>
+<td>cp</td>
+<td>从容器里面复制文件或目录到宿主机系统或以标准形式输出</td>
+</tr>
+<tr>
+<td>create</td>
+<td>创建一个新容器</td>
+</tr>
+<tr>
+<td>diff</td>
+<td>检查容器的文件系统变化情况</td>
+</tr>
+<tr>
+<td>events</td>
+<td>获取Docker服务器端的事件日志</td>
+</tr>
+<tr>
+<td>exec</td>
+<td>在一个运行中的容器中执行命令</td>
+</tr>
+<tr>
+<td>export</td>
+<td>导出容器的文件系统到指定位置</td>
+</tr>
+<tr>
+<td>inspect</td>
+<td>获取容器的元数据</td>
+</tr>
+<tr>
+<td>kill</td>
+<td>杀死一个运行中的容器，该指令不可被容器内部拦截</td>
+</tr>
+<tr>
+<td>logs</td>
+<td>获取容器的运行日志</td>
+</tr>
+<tr>
+<td>pause</td>
+<td>暂停容器内部的所有进程</td>
+</tr>
+<tr>
+<td>port</td>
+<td>输出容器的端口信息</td>
+</tr>
+<tr>
+<td>ps</td>
+<td>显示当前Docker中的容器列表</td>
+</tr>
+<tr>
+<td>rename</td>
+<td>重命名一个容器</td>
+</tr>
+<tr>
+<td>restart</td>
+<td>重启一个容器</td>
+</tr>
+<tr>
+<td>rm</td>
+<td>移除一个或多个容器</td>
+</tr>
+<tr>
+<td>run</td>
+<td>启动一个容器</td>
+</tr>
+<tr>
+<td>start</td>
+<td>启动一个或多个挂起/暂停中的容器</td>
+</tr>
+<tr>
+<td>stats</td>
+<td>显示容器的资源占用情况</td>
+</tr>
+<tr>
+<td>stop</td>
+<td>暂停正在运行的容器</td>
+</tr>
+<tr>
+<td>top</td>
+<td>显示容器内正在运行的进程</td>
+</tr>
+<tr>
+<td>unpause</td>
+<td>恢复所有暂停的进程</td>
+</tr>
+<tr>
+<td>update</td>
+<td>更新一个或多个容器的配置</td>
+</tr>
+<tr>
+<td>wait</td>
+<td>阻塞一个容器，并逐步停止该容器</td>
+</tr>
+</tbody>
+</table>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/jinyecheng.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/juhuatai.mp3'></li>
+                        
+                    
+                        
+                            <li title='2' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/MapleStory.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='true'
+        data-ci='5b763306cd7b9d9c3981'
+        data-cs='c31e9bf78a807055f5439caea747b09d1d9c8f18'
+        data-r='image-blog.io'
+        data-o='WhiteRobe'
+        data-a='WhiteRobe'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#容器及其相关"><span class="toc-number">1.</span> <span class="toc-text"> 容器及其相关</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#从dockerfile构建容器"><span class="toc-number">1.1.</span> <span class="toc-text"> 从Dockerfile构建容器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dockerfile指令"><span class="toc-number">1.1.1.</span> <span class="toc-text"> Dockerfile指令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#从容器到映像"><span class="toc-number">1.2.</span> <span class="toc-text"> 从容器到映像</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用docker-build-命令进行打包"><span class="toc-number">1.2.1.</span> <span class="toc-text"> 使用docker build 命令进行打包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#发布image"><span class="toc-number">1.2.2.</span> <span class="toc-text"> 发布Image</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#容器基本操作"><span class="toc-number">1.3.</span> <span class="toc-text"> 容器基本操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#常用指令列表"><span class="toc-number">1.3.1.</span> <span class="toc-text"> 常用指令列表</span></a></li></ol></li></ol></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+    <!--下悬浮返回键-->
+    <div style="background: white; height:30px; width: 30px; border-radius: 16px; position: fixed; bottom: 1.5rem; right: 1.5rem; border: 2px solid rgba(0, 0, 0, 0.5)">
+      <a class="icon-left image-icon" style="left:4px; top:4px" href="javascript:history.back()"></a>
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

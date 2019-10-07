@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html lang="zh" class="loading">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Python：语法糖-Python可变参数与装饰器笔记 - WhiteRobe&#39;s Blog</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.0/katex.min.css" rel="stylesheet">
+    <meta name="keywords" content="WhiteRobe, Blog,"> 
+    <meta name="description" content="着眼实例，从最简单的开始；你觉得再简单不过的东西，或许在别人眼里那就是悬崖。而我，愿作那攀岩绳。,了解装饰器先要了解Python的语法糖——
+ Python语法糖——可变参数
+可变参数其实很好理解，参考以下代码：
+1234def func(value, *args, **kwargs):	pri,"> 
+    <meta name="author" content="WhiteRobe"> 
+    <link rel="alternative" href="atom.xml" title="WhiteRobe&#39;s Blog" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/fira_code.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+        <!--站内搜索API-->
+        <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/algolia-min.css" integrity="sha256-HB49n/BZjuqiCtQQf49OdZn63XuKFaxcIHWf0HNKte8=" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@3.4.0/dist/instantsearch.production.min.js" integrity="sha256-pM0n88cBFRHpSn0N26ETsQdwpA7WAXJDvkHeCLh3ujI=" crossorigin="anonymous"></script>
+    
+    <!-- <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+          // No more ads!
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script> -->
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">WhiteRobe&#39;s Blog</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block; display: block;position: fixed; top: 0px;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="https://blog.whiterobe.top"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">Python：语法糖-Python可变参数与装饰器笔记</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div style="font-size: 1rem;margin-right: -10px">
+          分享此文：
+        </div>
+        <div>
+          <div class="share">
+              <a title="获取文章地址二维码" class="icon-scan" href="javascript:;"></a>
+          </div>
+          <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section" style="margin-top: 50px">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">Python：语法糖-Python可变参数与装饰器笔记</h1>
+        <div class="stuff">
+            <span>九月 27, 2019</span>
+            <span id="busuanzi_container_page_pv" class="busuanzi_page" style="display:none">本文总阅读量<div id="busuanzi_value_page_pv" style="display: inline;">1</div>次</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/python/">python</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/语法糖/">语法糖</a></li></ul>
+
+
+        </div>
+        <div class="low-resolution-warn-info">当前设备屏幕尺寸过小，推荐使用PC模式浏览。</div>
+        <div class="content markdown">
+            <p>了解装饰器先要了解Python的语法糖——</p>
+<h2 id="python语法糖可变参数"><a class="markdownIt-Anchor" href="#python语法糖可变参数"></a> Python语法糖——可变参数</h2>
+<p>可变参数其实很好理解，参考以下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">(value, *args, **kwargs)</span>:</span></span><br><span class="line">	print(value)</span><br><span class="line">	print(args)</span><br><span class="line">	print(kwargs)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">func(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, a=<span class="number">8</span>, b=<span class="number">7</span>) <span class="comment"># 打印: 2 \n (3, 4) \n &#123;'a': 8, 'b': 7&#125;</span></span><br><span class="line"><span class="comment"># func(2, 3, 4, a=8, value=7)  # 不合法，value字段已被占用</span></span><br></pre></td></tr></table></figure>
+<p>一些要注意的点：</p>
+<ul>
+<li><code>*args</code>传递的是一个<code>tuple</code>，例如上文把2 3 4 打包成一个<code>tuple</code>赋给<code>args</code></li>
+<li><code>**kwargs</code>传递的是一个字典，例如上文的<code>a=8</code>和<code>b=7</code></li>
+<li><code>*arsg</code>要在<code>**kwargs</code>前，<code>**kwargs</code>总是在最后</li>
+<li>各参数的位置顺序为：<code>func</code>(位置参数, 默认参数, 可变参数, 命名关键字参数, 关键字参数)，如下面这段代码：</li>
+</ul>
+<p>注意位置顺序——</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func2</span><span class="params">(param, default_param=<span class="number">7</span>, *arg, key_param1, **kwargs)</span>:</span></span><br><span class="line">    print(param)</span><br><span class="line">    print(default_param)</span><br><span class="line">    print(arg)</span><br><span class="line">    print(key_param1)</span><br><span class="line">    print(kwargs)</span><br></pre></td></tr></table></figure>
+<p>​    调用这个函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">func2(<span class="number">101</span>, <span class="number">202</span>, <span class="number">303</span>, <span class="number">404</span>, key_param1=<span class="number">10</span>, a=<span class="number">11</span>, b=<span class="number">12</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="装饰器模式"><a class="markdownIt-Anchor" href="#装饰器模式"></a> 装饰器模式</h2>
+<p>考虑一种场景，函数<code>print_name(id)</code>将会根据身份证号查找并打印某个人的姓名，其实现逻辑为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">first_name = &#123;</span><br><span class="line">    <span class="string">'101'</span>: <span class="string">'David'</span>,</span><br><span class="line">    <span class="string">'202'</span>: <span class="string">'Tony'</span>,</span><br><span class="line">    <span class="string">'303'</span>: <span class="string">'Shenpibaipao'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_first_name</span><span class="params">(id)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> first_name[id]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">print_name</span><span class="params">(id)</span>:</span></span><br><span class="line">	print(find_first_name(id))</span><br></pre></td></tr></table></figure>
+<p>那么随着业务修改，还需要输出用户的<code>last_name</code>该怎么办呢？或许我们可以修改<code>print_name</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">last_name = &#123;</span><br><span class="line">	<span class="string">'101'</span>: <span class="string">'Coco'</span>,</span><br><span class="line">	<span class="string">'202'</span>: <span class="string">'Lov'</span>,</span><br><span class="line">	<span class="string">'303'</span>: <span class="string">'CNDZ'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">find_last_name(id):</span><br><span class="line">	<span class="keyword">return</span> last_name[id] <span class="comment"># 添加新的业务逻辑</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">print_name</span><span class="params">(id)</span>:</span> <span class="comment"># 修改原有业务逻辑</span></span><br><span class="line">	print(find_first_name(id), find_last_name(id))</span><br></pre></td></tr></table></figure>
+<p>但是OP设计模式告诉我们，“添”永远好过于“改”，那么我们或许能用一种更高明的方法,不改变<code>print_name</code>函数同时实现这个逻辑：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">wrapped_print_name</span><span class="params">(func,id)</span>:</span>  <span class="comment"># 接收一个函数func作为参数</span></span><br><span class="line">	func(id)  </span><br><span class="line">	print(find_last_name(id))  <span class="comment"># 添加逻辑</span></span><br><span class="line"></span><br><span class="line">wrapped_print_name(print_name,<span class="string">'101'</span>)  <span class="comment"># 输出 David Coco，完成目标逻辑</span></span><br></pre></td></tr></table></figure>
+<p>每次使用都还要传一个函数，难免有点麻烦；同时，注意到上文传递函数时，还需要根据条件赋参，实际上改变了<code>print_name</code>的调用形式。所以，我们可以利用装饰器模式来解决这个问题。Python给了<code>@</code>这个装饰器语法糖让我们更好地完成这个任务，我们再次实现这个逻辑:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decorator</span><span class="params">(func)</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args, **kwargs)</span>:</span>  <span class="comment"># 包裹器包裹住新的业务逻辑</span></span><br><span class="line">		func(*args, **kwargs)</span><br><span class="line">		print(find_last_name(args[<span class="number">0</span>]))</span><br><span class="line">	<span class="keyword">return</span> wrapper  <span class="comment"># 返回包裹器</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@decorator</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">print_name</span><span class="params">(id)</span>:</span></span><br><span class="line">	print(find_first_name(id))</span><br><span class="line"></span><br><span class="line">print_name(<span class="string">'101'</span>) <span class="comment"># 输出 David Coco，完成目标逻辑同时没有改变其调用方式</span></span><br><span class="line"><span class="comment"># decorator(print_name)('101')# 或者不适用@语法糖，可以这么调用</span></span><br></pre></td></tr></table></figure>
+<p>这种方式可能看起来很怪，但确实是一种非常简洁明了的写法。但此时又有一种问题，我如果像进一步向包裹器内附加参数怎么办？比如我想先输出一行提示文字，再输出用户的姓名：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">print_decorator</span><span class="params">(param)</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">decorator</span><span class="params">(func)</span>:</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args, **kwargs)</span>:</span>  <span class="comment"># 包裹器包裹住新的业务逻辑</span></span><br><span class="line">            print(param)  <span class="comment"># 添加此行新业务逻辑</span></span><br><span class="line">            func(*args, **kwargs)</span><br><span class="line">            print(find_last_name(args[<span class="number">0</span>]))</span><br><span class="line">        <span class="keyword">return</span> wrapper  <span class="comment"># 返回包裹器</span></span><br><span class="line">    <span class="keyword">return</span> decorator</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@print_decorator(param='Find Name:')</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">print_name</span><span class="params">(id)</span>:</span></span><br><span class="line">	print(find_first_name(id))</span><br></pre></td></tr></table></figure>
+<p>调用这个函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print_name(<span class="string">'101'</span>) <span class="comment"># 输出 Find Name: David Coco</span></span><br></pre></td></tr></table></figure>
+<h2 id="python装饰器的三层结构"><a class="markdownIt-Anchor" href="#python装饰器的三层结构"></a> Python装饰器的三层结构</h2>
+<ol>
+<li>第一层(装饰器包裹器)：接受装饰器的新参数，返回装饰器</li>
+<li>第二层(装饰器)：接受被包裹的函数，返回内部包裹器</li>
+<li>第三层(内部包裹器)：接受参数，实现新业务逻辑</li>
+</ol>
+<p>下面给出另外一个例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">deco</span><span class="params">(param)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(func)</span>:</span></span><br><span class="line">	    <span class="function"><span class="keyword">def</span> <span class="title">inner_wrapper</span><span class="params">(*arg, **kwargs)</span>:</span></span><br><span class="line">		    print(param, arg, kwargs)</span><br><span class="line">		    inner_res = func(*arg, **kwargs)</span><br><span class="line">		    <span class="keyword">return</span> inner_res</span><br><span class="line">	    <span class="keyword">return</span> inner_wrapper</span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@deco(param="do what you want to do")</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">origin</span><span class="params">(times, add, sub, num=<span class="number">1</span>)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> times*(num + add) - sub</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">result = origin(<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, num=<span class="number">5</span>)</span><br><span class="line">print(<span class="string">"result ="</span>, result) <span class="comment"># 打印 do what you want to do (1, 1, 0) &#123;'num': 5&#125;</span></span><br></pre></td></tr></table></figure>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/jinyecheng.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/juhuatai.mp3'></li>
+                        
+                    
+                        
+                            <li title='2' data-url='https://gitee.com/shenpibaipao/wr-diaspora/raw/master/source/audio/MapleStory.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='true'
+        data-ci='5b763306cd7b9d9c3981'
+        data-cs='c31e9bf78a807055f5439caea747b09d1d9c8f18'
+        data-r='image-blog.io'
+        data-o='WhiteRobe'
+        data-a='WhiteRobe'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#python语法糖可变参数"><span class="toc-number">1.</span> <span class="toc-text"> Python语法糖——可变参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#装饰器模式"><span class="toc-number">2.</span> <span class="toc-text"> 装饰器模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#python装饰器的三层结构"><span class="toc-number">3.</span> <span class="toc-text"> Python装饰器的三层结构</span></a></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+    <!--下悬浮返回键-->
+    <div style="background: white; height:30px; width: 30px; border-radius: 16px; position: fixed; bottom: 1.5rem; right: 1.5rem; border: 2px solid rgba(0, 0, 0, 0.5)">
+      <a class="icon-left image-icon" style="left:4px; top:4px" href="javascript:history.back()"></a>
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
